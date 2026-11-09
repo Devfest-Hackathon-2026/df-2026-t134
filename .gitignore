@@ -32,3 +32,10 @@ Thumbs.db
 .vscode/*
 !.vscode/extensions.json
 *.log
+
+# Claude Code の設定・指示ファイル（コミットしない）
+.claude/
+**/CLAUDE.md
+**/CLAUDE.local.md
+**/CLAUDE.local.md.example
+.mcp.json
