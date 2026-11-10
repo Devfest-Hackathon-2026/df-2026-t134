@@ -1,0 +1,94 @@
+lesson:
+  id: u1-l3
+  unitId: u1
+  order: 3
+  title: AI を「助っ人」にしよう
+  exerciseIds: [u1-l3-q1, u1-l3-q2, u1-l3-q3, u1-l3-q4, u1-l3-q5, u1-l3-q6]
+  intro:
+    text: |-
+      AI は、勉強や調べものの心強い助っ人になるよ。
+      でも、答えを丸写しするのはもったいない！上手な使い方を練習しよう。
+
+exercises:
+  - id: u1-l3-q1
+    lessonId: u1-l3
+    type: choice
+    question: 自由研究で AI を使うとき、いちばんよい使い方はどれ？
+    options:
+      - id: a
+        text: AI が書いたレポートを、そのまま自分の名前で出す
+      - id: b
+        text: テーマのアイデアを出してもらい、調べることやまとめは自分でやる
+      - id: c
+        text: AI の答えは正しいので、本やウェブサイトで確かめずに使う
+
+  - id: u1-l3-q2
+    lessonId: u1-l3
+    type: order
+    question: AI の答えが正しいか確かめる手順を、正しい順番にならべよう。
+    items:
+      - id: compare
+        text: AI の答えと、調べた内容を見くらべる
+      - id: mark
+        text: AI の答えを読んで、数字・日付・人の名前など大事なところに印をつける
+      - id: fix
+        text: ちがっていたら、正しい情報に直してから使う
+      - id: search
+        text: 教科書や信頼できるウェブサイトなど、別の情報源で調べる
+
+  - id: u1-l3-q3
+    lessonId: u1-l3
+    type: choice
+    question: AI が「〇〇という本に書いてあります」と答えた。どうするのがいちばんよい？
+    options:
+      - id: a
+        text: 本の名前まで出ているので、正しいと考えてそのまま使う
+      - id: b
+        text: AI に「本当？」と聞き直して、「本当です」と言われたら信じる
+      - id: c
+        text: その本が本当にあるか、図書館や検索で確かめてから使う
+
+  - id: u1-l3-q4
+    lessonId: u1-l3
+    type: fill_blank
+    question: 空らんに入ることばを選んで、AI とのつきあい方をまとめよう。
+    template: AI は{{role}}として使い、最後に内容を確かめて決めるのは{{who}}だ。
+    blanks:
+      - id: role
+        options:
+          - id: a
+            text: 助っ人
+          - id: b
+            text: 答えの正解表
+          - id: c
+            text: 宿題の代わりに出すもの
+      - id: who
+        options:
+          - id: a
+            text: AI 自身
+          - id: b
+            text: 自分
+          - id: c
+            text: 運
+
+  - id: u1-l3-q5
+    lessonId: u1-l3
+    type: choice
+    question: 読書感想文を書くときの AI の使い方として、よくないのはどれ？
+    options:
+      - id: a
+        text: 書きたいことを箇条書きにして、文章の組み立て方のアドバイスをもらう
+      - id: b
+        text: 本を読まずに、AI に感想文を全部書いてもらって提出する
+      - id: c
+        text: 自分で書いた文の、分かりにくいところを指摘してもらう
+
+  - id: u1-l3-q6
+    lessonId: u1-l3
+    type: choice
+    question: AI の答えが、とても自然で分かりやすい文章だった。だから、内容も正しいと言える？
+    options:
+      - id: a
+        text: 言える
+      - id: b
+        text: 言えない

@@ -1,0 +1,473 @@
+{
+  "$defs": {
+    "AgentAnswerKey": {
+      "additionalProperties": false,
+      "description": "What the agent needs to reach the goal, and what the mock tools return.\nGrading is deterministic: the run succeeds iff every required tool and rule is picked and\nno forbidden tool is. The model only narrates the run with these tool outputs.",
+      "properties": {
+        "explanation": {
+          "minLength": 1,
+          "title": "Explanation",
+          "type": "string"
+        },
+        "forbiddenToolIds": {
+          "items": {
+            "maxLength": 64,
+            "minLength": 1,
+            "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+            "type": "string"
+          },
+          "title": "Forbiddentoolids",
+          "type": "array"
+        },
+        "requiredRuleIds": {
+          "items": {
+            "maxLength": 64,
+            "minLength": 1,
+            "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+            "type": "string"
+          },
+          "title": "Requiredruleids",
+          "type": "array"
+        },
+        "requiredToolIds": {
+          "items": {
+            "maxLength": 64,
+            "minLength": 1,
+            "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Requiredtoolids",
+          "type": "array"
+        },
+        "toolOutputs": {
+          "patternProperties": {
+            "^[a-z0-9]+(-[a-z0-9]+)*$": {
+              "minLength": 1,
+              "type": "string"
+            }
+          },
+          "propertyNames": {
+            "maxLength": 64,
+            "minLength": 1
+          },
+          "title": "Tooloutputs",
+          "type": "object"
+        },
+        "type": {
+          "const": "agent",
+          "title": "Type",
+          "type": "string"
+        }
+      },
+      "required": [
+        "type",
+        "requiredToolIds",
+        "toolOutputs",
+        "explanation"
+      ],
+      "title": "AgentAnswerKey",
+      "type": "object"
+    },
+    "ChoiceAnswerKey": {
+      "additionalProperties": false,
+      "properties": {
+        "correctOptionId": {
+          "maxLength": 64,
+          "minLength": 1,
+          "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+          "title": "Correctoptionid",
+          "type": "string"
+        },
+        "explanation": {
+          "minLength": 1,
+          "title": "Explanation",
+          "type": "string"
+        },
+        "type": {
+          "const": "choice",
+          "title": "Type",
+          "type": "string"
+        }
+      },
+      "required": [
+        "type",
+        "correctOptionId",
+        "explanation"
+      ],
+      "title": "ChoiceAnswerKey",
+      "type": "object"
+    },
+    "FillBlankAnswerKey": {
+      "additionalProperties": false,
+      "properties": {
+        "correctOptions": {
+          "maxProperties": 4,
+          "minProperties": 1,
+          "patternProperties": {
+            "^[a-z0-9]+(-[a-z0-9]+)*$": {
+              "maxLength": 64,
+              "minLength": 1,
+              "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+              "type": "string"
+            }
+          },
+          "propertyNames": {
+            "maxLength": 64,
+            "minLength": 1
+          },
+          "title": "Correctoptions",
+          "type": "object"
+        },
+        "explanation": {
+          "minLength": 1,
+          "title": "Explanation",
+          "type": "string"
+        },
+        "type": {
+          "const": "fill_blank",
+          "title": "Type",
+          "type": "string"
+        }
+      },
+      "required": [
+        "type",
+        "correctOptions",
+        "explanation"
+      ],
+      "title": "FillBlankAnswerKey",
+      "type": "object"
+    },
+    "HallucinationAnswerKey": {
+      "additionalProperties": false,
+      "properties": {
+        "errors": {
+          "items": {
+            "$ref": "#/$defs/HallucinationError"
+          },
+          "maxItems": 3,
+          "minItems": 1,
+          "title": "Errors",
+          "type": "array"
+        },
+        "type": {
+          "const": "hallucination",
+          "title": "Type",
+          "type": "string"
+        }
+      },
+      "required": [
+        "type",
+        "errors"
+      ],
+      "title": "HallucinationAnswerKey",
+      "type": "object"
+    },
+    "HallucinationError": {
+      "additionalProperties": false,
+      "properties": {
+        "correction": {
+          "minLength": 1,
+          "title": "Correction",
+          "type": "string"
+        },
+        "errorType": {
+          "enum": [
+            "number",
+            "date",
+            "name",
+            "fake_source",
+            "causality",
+            "fact"
+          ],
+          "title": "Errortype",
+          "type": "string"
+        },
+        "index": {
+          "minimum": 0,
+          "title": "Index",
+          "type": "integer"
+        },
+        "tip": {
+          "minLength": 1,
+          "title": "Tip",
+          "type": "string"
+        }
+      },
+      "required": [
+        "index",
+        "errorType",
+        "correction",
+        "tip"
+      ],
+      "title": "HallucinationError",
+      "type": "object"
+    },
+    "Illustration": {
+      "additionalProperties": false,
+      "description": "A picture for a story scene. `prompt` describes it for the image model (authoring);\n`image_path` (Cloud Storage) is filled in by the content tools, never written by hand.",
+      "properties": {
+        "imagePath": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Imagepath"
+        },
+        "prompt": {
+          "minLength": 1,
+          "title": "Prompt",
+          "type": "string"
+        }
+      },
+      "required": [
+        "prompt"
+      ],
+      "title": "Illustration",
+      "type": "object"
+    },
+    "LiveCheckAnswerKey": {
+      "additionalProperties": false,
+      "description": "Guidance for the server: what prompts stay on the theme, and what the answer should\ncover. The wrong sentences are made per session, so they are not part of the key.",
+      "properties": {
+        "topicGuide": {
+          "minLength": 1,
+          "title": "Topicguide",
+          "type": "string"
+        },
+        "type": {
+          "const": "live_check",
+          "title": "Type",
+          "type": "string"
+        }
+      },
+      "required": [
+        "type",
+        "topicGuide"
+      ],
+      "title": "LiveCheckAnswerKey",
+      "type": "object"
+    },
+    "OrderAnswerKey": {
+      "additionalProperties": false,
+      "properties": {
+        "correctOrder": {
+          "items": {
+            "maxLength": 64,
+            "minLength": 1,
+            "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+            "type": "string"
+          },
+          "maxItems": 8,
+          "minItems": 2,
+          "title": "Correctorder",
+          "type": "array"
+        },
+        "explanation": {
+          "minLength": 1,
+          "title": "Explanation",
+          "type": "string"
+        },
+        "type": {
+          "const": "order",
+          "title": "Type",
+          "type": "string"
+        }
+      },
+      "required": [
+        "type",
+        "correctOrder",
+        "explanation"
+      ],
+      "title": "OrderAnswerKey",
+      "type": "object"
+    },
+    "PromptAnswerKey": {
+      "additionalProperties": false,
+      "description": "Notes for the grader about what a good prompt for this task contains.",
+      "properties": {
+        "gradingNotes": {
+          "minLength": 1,
+          "title": "Gradingnotes",
+          "type": "string"
+        },
+        "type": {
+          "const": "prompt",
+          "title": "Type",
+          "type": "string"
+        }
+      },
+      "required": [
+        "type",
+        "gradingNotes"
+      ],
+      "title": "PromptAnswerKey",
+      "type": "object"
+    },
+    "Scene": {
+      "additionalProperties": false,
+      "description": "One panel of a story: who speaks, what they say, and optionally a picture.\n`audio_path` is filled in by the content tools (each speaker has its own voice).",
+      "properties": {
+        "audioPath": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Audiopath"
+        },
+        "illustration": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Illustration"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "speaker": {
+          "enum": [
+            "narrator",
+            "mascot",
+            "student",
+            "friend",
+            "teacher",
+            "ai"
+          ],
+          "title": "Speaker",
+          "type": "string"
+        },
+        "text": {
+          "minLength": 1,
+          "title": "Text",
+          "type": "string"
+        }
+      },
+      "required": [
+        "speaker",
+        "text"
+      ],
+      "title": "Scene",
+      "type": "object"
+    },
+    "StoryAnswerKey": {
+      "additionalProperties": false,
+      "properties": {
+        "bestOptionId": {
+          "maxLength": 64,
+          "minLength": 1,
+          "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+          "title": "Bestoptionid",
+          "type": "string"
+        },
+        "explanation": {
+          "minLength": 1,
+          "title": "Explanation",
+          "type": "string"
+        },
+        "outcomes": {
+          "items": {
+            "$ref": "#/$defs/StoryOutcome"
+          },
+          "maxItems": 4,
+          "minItems": 2,
+          "title": "Outcomes",
+          "type": "array"
+        },
+        "type": {
+          "const": "story",
+          "title": "Type",
+          "type": "string"
+        }
+      },
+      "required": [
+        "type",
+        "bestOptionId",
+        "outcomes",
+        "explanation"
+      ],
+      "title": "StoryAnswerKey",
+      "type": "object"
+    },
+    "StoryOutcome": {
+      "additionalProperties": false,
+      "description": "What happens after the learner picks `option_id`.",
+      "properties": {
+        "optionId": {
+          "maxLength": 64,
+          "minLength": 1,
+          "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+          "title": "Optionid",
+          "type": "string"
+        },
+        "scenes": {
+          "items": {
+            "$ref": "#/$defs/Scene"
+          },
+          "maxItems": 4,
+          "minItems": 1,
+          "title": "Scenes",
+          "type": "array"
+        }
+      },
+      "required": [
+        "optionId",
+        "scenes"
+      ],
+      "title": "StoryOutcome",
+      "type": "object"
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "discriminator": {
+    "mapping": {
+      "agent": "#/$defs/AgentAnswerKey",
+      "choice": "#/$defs/ChoiceAnswerKey",
+      "fill_blank": "#/$defs/FillBlankAnswerKey",
+      "hallucination": "#/$defs/HallucinationAnswerKey",
+      "live_check": "#/$defs/LiveCheckAnswerKey",
+      "order": "#/$defs/OrderAnswerKey",
+      "prompt": "#/$defs/PromptAnswerKey",
+      "story": "#/$defs/StoryAnswerKey"
+    },
+    "propertyName": "type"
+  },
+  "oneOf": [
+    {
+      "$ref": "#/$defs/ChoiceAnswerKey"
+    },
+    {
+      "$ref": "#/$defs/OrderAnswerKey"
+    },
+    {
+      "$ref": "#/$defs/FillBlankAnswerKey"
+    },
+    {
+      "$ref": "#/$defs/HallucinationAnswerKey"
+    },
+    {
+      "$ref": "#/$defs/PromptAnswerKey"
+    },
+    {
+      "$ref": "#/$defs/StoryAnswerKey"
+    },
+    {
+      "$ref": "#/$defs/LiveCheckAnswerKey"
+    },
+    {
+      "$ref": "#/$defs/AgentAnswerKey"
+    }
+  ],
+  "title": "answer_key"
+}

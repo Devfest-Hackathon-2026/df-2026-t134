@@ -1,0 +1,145 @@
+u1-l4-q1:
+  type: story
+  bestOptionId: check
+  outcomes:
+    - optionId: copy
+      scenes:
+        - speaker: narrator
+          text: 発表の日。ユイが「ホタルは電気で光ります」と発表すると、先生が首をかしげました。
+          illustration:
+            prompt: >-
+              Yui standing at the front of a bright classroom giving a short presentation with a
+              poster of a firefly (no writing on it), while the teacher at the side tilts her head
+              with a puzzled but kind expression.
+        - speaker: teacher
+          text: ホタルの光は、電気ではなく、体の中の化学反応なんだよ。どこで調べたのかな？
+        - speaker: student
+          text: AI の答えを、そのまま書いちゃった……。確かめればよかったな。
+    - optionId: check
+      scenes:
+        - speaker: narrator
+          text: ユイは図書館で、昆虫の図鑑を開きました。
+          illustration:
+            prompt: >-
+              Yui in a cozy, sunny public library sitting at a table with a large open insect
+              picture book showing a firefly illustration, her finger following the page,
+              eyes wide with discovery.
+        - speaker: student
+          text: あれ？　電気じゃなくて、ルシフェリンという物質の化学反応で光るんだって！
+        - speaker: teacher
+          text: よく確かめたね。調べた本の名前も書いてあって、すばらしいレポートだよ。
+          illustration:
+            prompt: >-
+              In the classroom, the smiling teacher hands a neatly bound report back to a happy,
+              proud Yui. Warm daylight.
+    - optionId: ask-again
+      scenes:
+        - speaker: student
+          text: AI、それって本当？
+        - speaker: ai
+          text: はい、本当です！　ホタルは電気で光っています。
+          illustration:
+            prompt: >-
+              Night at Yui's desk: the AI assistant tablet glowing and nodding with a confident
+              smile, while Yui looks at it with a slightly doubtful face.
+        - speaker: narrator
+          text: でも、AI に聞き直しても、確かめたことにはなりません。ユイは、まちがったまま書いてしまいました。
+  explanation: |-
+    AI は、まちがったことでも自信たっぷりに、分かりやすく答えることがあるよ。
+    ホタルが光るのは電気ではなく、ルシフェリンという物質が、ルシフェラーゼという酵素のはたらきで酸素と反応する「化学反応」のおかげなんだ。
+    AI に聞き直しても確かめたことにはならないから、図鑑や教科書など、AI 以外の情報源で確かめよう。
+
+u1-l4-q2:
+  type: story
+  bestOptionId: stop
+  outcomes:
+    - optionId: join
+      scenes:
+        - speaker: narrator
+          text: できた画像は、あっという間にほかのクラスにまで広まってしまいました。
+          illustration:
+            prompt: >-
+              A school hallway where several students look at their tablets and whisper to each
+              other; in the middle, Sota and Yui stand looking shocked and uneasy. Screens show
+              only blurred shapes.
+        - speaker: friend
+          text: こんなに広まるなんて……。消しても、もう全部は消せないよ。
+        - speaker: narrator
+          text: 写真を使われた友だちは、とても悲しい気持ちになりました。
+    - optionId: stop
+      scenes:
+        - speaker: student
+          text: 友だちの写真や住所は、その人の大切な個人情報だよ。勝手に AI に入れるのはやめよう。
+          illustration:
+            prompt: >-
+              In the sunny classroom, Yui gently talks to Sota with a kind but serious face, one
+              hand raised as if saying "wait"; Sota lowers his tablet and listens.
+        - speaker: teacher
+          text: よく止めてくれたね。入れる前に「本人はいいと言っているかな？」と考えるのが大事だよ。
+          illustration:
+            prompt: >-
+              The kind teacher crouching slightly beside Yui and Sota at a desk in the classroom,
+              smiling warmly and explaining; both students listen and nod.
+        - speaker: friend
+          text: そっか……。じゃあ、自分で描いたイラストでつくってみるよ！
+    - optionId: ignore
+      scenes:
+        - speaker: narrator
+          text: 次の日、ソウタがつくった画像のことで、クラスは大さわぎになっていました。
+          illustration:
+            prompt: >-
+              The next morning in the classroom, students gather in small worried groups around
+              a tablet; Yui stands by the door with her school bag, looking regretful.
+        - speaker: student
+          text: あのとき、ひとこと言えばよかったな……。
+  explanation: |-
+    写真・名前・住所などの個人情報は、本人の許可なく AI に入れたり、ネットに出したりしてはいけないよ。
+    一度広まった画像や情報は、完全に消すのがとてもむずかしいんだ。
+    友だちが困ったことをしそうなときは、やさしく止めて、先生やおうちの人にも相談しよう。
+
+u1-l4-q3:
+  type: story
+  bestOptionId: own-words
+  outcomes:
+    - optionId: ai-writes
+      scenes:
+        - speaker: narrator
+          text: 作文はすぐにできあがりました。でも、読み返しても、自分の作文という気がしません。
+          illustration:
+            prompt: >-
+              Yui at the dining table holding up a finished sheet of writing paper covered in
+              soft gray lines (no readable writing), looking at it with a puzzled, empty
+              expression.
+        - speaker: teacher
+          text: 上手な文だけど、ユイさんらしさが見えないな。あなたが本当に感じたことを聞かせてほしいな。
+    - optionId: own-words
+      scenes:
+        - speaker: student
+          text: 夏祭りの思い出……そういえば、おばあちゃんといっしょに金魚すくいをしたっけ。
+          illustration:
+            prompt: >-
+              A warm memory scene at a summer night festival: Yui as a younger girl in a light
+              yukata scooping goldfish with a paper scoop beside her smiling grandmother, paper
+              lanterns glowing overhead.
+        - speaker: narrator
+          text: ユイは、そのときの気持ちを思い出しながら、自分のことばで書きました。
+        - speaker: teacher
+          text: 金魚すくいの場面、ユイさんのうれしい気持ちが伝わってくるね！
+          illustration:
+            prompt: >-
+              In the classroom, the teacher reads a sheet of writing paper with a delighted
+              smile while Yui stands beside her, cheeks slightly pink, happy and proud.
+    - optionId: copy-friend
+      scenes:
+        - speaker: friend
+          text: え、ぼくの作文を写すの？　それはちょっと……。
+          illustration:
+            prompt: >-
+              In the classroom, Sota holds his writing paper close to his chest with an awkward,
+              troubled smile, while Yui stands in front of him with her hands together asking.
+        - speaker: narrator
+          text: 人の作文を写すのも、AI に書かせてそのまま出すのも、自分の力にはなりません。
+  explanation: |-
+    AI は、アイデアを広げる助っ人として使おう。作文は、自分の体験や気持ちを、自分のことばで書くものだよ。
+    AI が書いた文章をそのまま出すのは、自分の作品とは言えないんだ。
+    宿題で AI を使ってよいかどうかは、学校のルールも確認しよう。

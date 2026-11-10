@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "completedLessonIds": {
+      "items": {
+        "maxLength": 64,
+        "minLength": 1,
+        "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+        "type": "string"
+      },
+      "title": "Completedlessonids",
+      "type": "array"
+    },
+    "freezeTickets": {
+      "maximum": 3,
+      "minimum": 0,
+      "title": "Freezetickets",
+      "type": "integer"
+    },
+    "lastStudiedOn": {
+      "anyOf": [
+        {
+          "format": "date",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Laststudiedon"
+    },
+    "streakDays": {
+      "minimum": 0,
+      "title": "Streakdays",
+      "type": "integer"
+    },
+    "xp": {
+      "minimum": 0,
+      "title": "Xp",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "xp",
+    "streakDays",
+    "lastStudiedOn",
+    "freezeTickets",
+    "completedLessonIds"
+  ],
+  "title": "Progress",
+  "type": "object"
+}

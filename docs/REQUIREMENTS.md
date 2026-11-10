@@ -102,6 +102,9 @@
 | Q6 | ファクトチェック | AI の主張を Google 検索の出典と突き合わせる | 出典付きで正誤を判定 | Grounding with Google Search |
 | Q7 | エージェント組み立て | 目標・ツール・手順をブロックで組み、実行の様子を観察する | 目標達成の可否 | ADK でエージェントを実行（§5.5） |
 | Q8 | リスニング | 音声で読み上げた AI 回答から誤りを聞き取る | 固定の正解 | Gemini TTS |
+| Q9 | 紙芝居シナリオ（`story`） | 絵・セリフ・キャラクターの声で進むお話の途中で主人公の行動を選び、選んだ行動の結末を見る | 固定の正解（最善の行動）。結末は選択ごとに用意 | 絵は Gemini の画像モデル、声は Gemini-TTS で事前生成 |
+| Q10 | ライブ・ハルシネーション検証（`live_check`） | 自分で書いたプロンプトに AI が答え、こっそり入れられた誤りを、Google 検索の出典を調べながら見つける | サーバーがその場で入れた誤りと照合（確定的） | リアルタイム（Grounding with Google Search + 誤り注入）。1 日の回数制限あり |
+| Q11 | エージェント組み立て（`agent`） | 目標に合わせてツールとルールのブロックを選び、AI エージェントが動く様子（考える → ツール → 結果）を見る | 必須・禁止のブロックとの照合（確定的） | ADK でエージェントを実行（模擬ツールのみ）。実行の様子の文章は Gemini |
 
 ### 4.5 ゲーミフィケーション
 
@@ -204,6 +207,11 @@
   - **ルール**：例「分からないときは人間に聞く」
 - サーバー側で Agent Development Kit（ADK）のエージェントとして実行し、**考える → ツールを使う → 結果を見る** の各ステップを画面に順番に表示する。
 - ツールが足りない・ルールがないと失敗するお題を用意し、「なぜ失敗したか」を考えさせる。
+- 仕組み（契約: 問題の種類 `agent`）:
+  - 問題: 目標 `goal`、状況 `situation`、選べるツール `tools` とルール `rules`、持たせられるツールの数の上限 `maxTools`（全部持たせる作戦を防ぐ）。
+  - 回答: 選んだツールとルールを `/v1/answers` に送る（`{"type":"agent","toolIds","ruleIds"}`）。
+  - 採点は確定的：正解キーの必須ツール・必須ルールをすべて選び、禁止ツールを選んでいなければ成功。
+  - サーバーは選ばれたブロックだけを持つ ADK のエージェントを実行し、模擬ツールは正解キーの決まった出力 `toolOutputs` を返す。実行の様子は `steps`（考える / ツールを使う / 結果を見る / 人に聞く / 答える / あきらめる）として結果に入る。足りないツール・ルール、選んではいけないツールも結果で示す。
 
 ### 5.6 最終プロジェクト：エージェントでプロダクトを作る（F-16、ストレッチ）
 
@@ -322,7 +330,7 @@ sequenceDiagram
   S->>A: レッスンを開始
   A->>F: 問題文を取得（正解キーなし）
   S->>A: 誤りだと思う文をタップして提出
-  A->>R: POST /v1/hallucination/check
+  A->>R: POST /v1/answers
   R->>F: 正解キーを参照し、回答を記録
   R-->>A: 正誤・正しい内容・見抜くコツ
   A->>G: 解説音声を取得（事前生成済み）
@@ -351,31 +359,36 @@ sequenceDiagram
 
 ## 9. データモデル（Cloud Firestore）
 
+正本は `api/app/schemas/firestore.py` と `api/app/schemas/content.py`。JSON のフィールド名は camelCase。
+
 | コレクション | 主なフィールド | 読み取り | 書き込み |
 |-------------|---------------|---------|---------|
-| `users/{uid}` | displayName, grade, role（student / teacher）, classIds, xp, streak, lastStudiedAt | 本人、所属クラスの教員 | 本人（xp などはサーバーのみ） |
-| `classes/{classId}` | name, teacherUid, inviteCode, leagueEnabled | メンバー | 教員 |
-| `classes/{classId}/members/{uid}` | joinedAt, displayName | 教員、本人 | サーバー |
-| `units/{unitId}` | title, order, level | 全ログインユーザー | 管理者のみ |
-| `units/{unitId}/lessons/{lessonId}` | title, order, exerciseIds | 全ログインユーザー | 管理者のみ |
-| `exercises/{exerciseId}` | type（Q1〜Q8）, body（問題文）, audioPath | 全ログインユーザー | 管理者のみ |
-| `answerKeys/{exerciseId}` | answers, explanations | **クライアント不可** | サーバーのみ |
-| `attempts/{uid}/items/{attemptId}` | exerciseId, answer, correct, score, createdAt | 本人、所属クラスの教員 | サーバーのみ |
-| `reviewQueue/{uid}/items/{exerciseId}` | dueAt, wrongCount | 本人 | サーバーのみ |
+| `users/{uid}` | displayName（ニックネーム、20 文字以内）, grade（j1〜j3, h1〜h3）, createdAt | 本人 | 本人（この 3 項目のみ） |
+| `progress/{uid}` | xp, streakDays, lastStudiedOn, freezeTickets, completedLessonIds | 本人 | サーバーのみ |
+| `units/{unitId}` | order, title, description, level | ログインユーザー | 教材ツールのみ |
+| `lessons/{lessonId}` | unitId, order, title, exerciseIds, intro | ログインユーザー | 教材ツールのみ |
+| `exercises/{exerciseId}` | type（choice / order / fill_blank / hallucination / prompt）と種類ごとの問題文 | ログインユーザー | 教材ツールのみ |
+| `answerKeys/{exerciseId}` | 種類ごとの正解・解説 | **クライアント不可** | 教材ツールのみ |
+| `exerciseDrafts/{draftId}` | 生成した問題の下書き（PR-10） | **クライアント不可** | サーバー・教材ツールのみ |
+| `attempts/{uid}/items/{attemptId}` | exerciseId, lessonId, type, correct / score, answer, feedbackText, xpGained, createdAt | 本人 | サーバーのみ |
+| `liveChecks/{uid}/items/{sessionId}` | ライブ検証の答え・入れた誤り・出典・調べた回数 | **クライアント不可** | サーバーのみ |
 
-- XP やスコアはクライアントから書き換えられないよう、サーバー（Admin SDK）だけが書き込む。
-- セキュリティルールで `answerKeys` は全面的に読み取り禁止にする。
+- プロフィール（本人が書く）と進捗（サーバーが書く）を別のコレクションに分け、XP などをクライアントから書き換えられないことをルールで保証する。
+- クラス・教員まわり（`classes` など）と復習キュー（`reviewQueue`）は、それぞれの機能の PR で追加する。
 
 ## 10. API 設計（Cloud Run）
 
-すべてのリクエストで `Authorization: Bearer <Firebase ID トークン>` と `X-Firebase-AppCheck` ヘッダーを必須とする。
+すべてのリクエストで `Authorization: Bearer <Firebase ID トークン>` と `X-Firebase-AppCheck` ヘッダーを必須とする。リクエスト・レスポンスの正本は `api/app/schemas/`、書き出したものが `docs/openapi.json`。エラーはすべて `{"error": {"code", "message"}}` の形で返す。
 
 | メソッド | パス | 概要 | 優先度 |
 |---------|------|------|--------|
-| POST | `/v1/hallucination/check` | ハルシネーション探しの回答を採点 | Must |
-| POST | `/v1/prompt/evaluate` | プロンプトをルーブリックで採点 | Must |
+| POST | `/v1/answers` | 選択・並べ替え・穴埋め・ハルシネーション探し（Q1〜Q3）の回答を採点・記録し、正解と解説を返す | Must |
+| POST | `/v1/lessons/{lessonId}/complete` | すべての問題に回答したレッスンを完了にする | Must |
+| POST | `/v1/prompt/evaluate` | プロンプトをルーブリックで採点（個人情報を含む場合は送信せず `blocked` を返す） | Must |
 | POST | `/v1/prompt/run` | 採点済みのプロンプトを実行して結果を返す | Should |
-| POST | `/v1/tts` | 文章を音声化（キャッシュがあればその URL を返す） | Must |
+| POST | `/v1/live-checks` | ライブ検証：学習者のプロンプトに、検索の根拠付きの答えを作り、こっそり誤りを入れて返す（`blocked` もあり） | Should |
+| POST | `/v1/live-checks/{sessionId}/lookup` | ライブ検証：1 文について Google 検索の出典を調べる（回数制限あり） | Should |
+| POST | `/v1/tts` | 自分の回答に対するフィードバック文を音声化（任意の文章は受け付けない） | Must |
 | POST | `/v1/factcheck` | 主張を Google 検索で確かめ、出典付きで返す | Should |
 | POST | `/v1/agent/run` | ブロックで組んだエージェントを実行し、ステップを返す | Should |
 | POST | `/v1/project/build` | 最終プロジェクトのミニアプリを生成 | Could |

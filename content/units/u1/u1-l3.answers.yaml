@@ -1,0 +1,46 @@
+u1-l3-q1:
+  type: choice
+  correctOptionId: b
+  explanation: |-
+    AI はアイデアを広げる相手として使い、調べて、考えて、まとめるのは自分でやろう。
+    丸写しは自分の力にならないし、まちがいがまざっていても気づけないよ。
+    AI を使ってよいかどうか、学校のルールも確認しよう。
+
+u1-l3-q2:
+  type: order
+  correctOrder: [mark, search, compare, fix]
+  explanation: |-
+    まず大事なところに印をつけて、別の情報源で調べ、見くらべて、ちがっていたら直そう。
+    とくに数字・日付・人の名前・本の名前は、まちがいが起きやすいところだよ。
+
+u1-l3-q3:
+  type: choice
+  correctOptionId: c
+  explanation: |-
+    AI は、本当はない本の名前を作ってしまうことがあるよ。
+    AI に聞き直しても、AI がまたそれらしい答えを予測するだけなので、確かめたことにはならないんだ。
+    図書館や検索など、AI 以外の方法で確かめよう。
+
+u1-l3-q4:
+  type: fill_blank
+  correctOptions:
+    role: a
+    who: b
+  explanation: |-
+    AI は考えるのを手伝ってくれる助っ人だよ。
+    AI は答えが正しいか保証できないから、最後に確かめて決めるのは自分なんだ。
+
+u1-l3-q5:
+  type: choice
+  correctOptionId: b
+  explanation: |-
+    感想文は、自分がどう感じたかを書くものだよ。
+    AI はアドバイス役として使って、感じたことや考えたことは自分のことばで書こう。
+
+u1-l3-q6:
+  type: choice
+  correctOptionId: b
+  explanation: |-
+    AI は「それらしい文」をつくるのが得意なので、まちがった内容でも自然な文章になるよ。
+    文章が上手かどうかと、内容が正しいかどうかは別のこと。
+    「AI は助っ人、確かめて決めるのは自分」をおぼえておこう！

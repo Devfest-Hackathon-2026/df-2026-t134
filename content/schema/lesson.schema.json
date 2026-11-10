@@ -1,0 +1,92 @@
+{
+  "$defs": {
+    "Speech": {
+      "additionalProperties": false,
+      "description": "A line spoken by the mascot. audio_path is filled in when audio is pre-generated.",
+      "properties": {
+        "audioPath": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Audiopath"
+        },
+        "text": {
+          "minLength": 1,
+          "title": "Text",
+          "type": "string"
+        }
+      },
+      "required": [
+        "text"
+      ],
+      "title": "Speech",
+      "type": "object"
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "exerciseIds": {
+      "items": {
+        "maxLength": 64,
+        "minLength": 1,
+        "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+        "type": "string"
+      },
+      "maxItems": 12,
+      "minItems": 1,
+      "title": "Exerciseids",
+      "type": "array"
+    },
+    "id": {
+      "maxLength": 64,
+      "minLength": 1,
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+      "title": "Id",
+      "type": "string"
+    },
+    "intro": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Speech"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "order": {
+      "minimum": 1,
+      "title": "Order",
+      "type": "integer"
+    },
+    "title": {
+      "minLength": 1,
+      "title": "Title",
+      "type": "string"
+    },
+    "unitId": {
+      "maxLength": 64,
+      "minLength": 1,
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+      "title": "Unitid",
+      "type": "string"
+    }
+  },
+  "required": [
+    "id",
+    "unitId",
+    "order",
+    "title",
+    "exerciseIds"
+  ],
+  "title": "Lesson",
+  "type": "object"
+}

@@ -1,0 +1,48 @@
+# `make illustrate` が書き出すファイル（手で編集しない）。
+# 紙しばいの場面の絵の説明（prompt）と、その画像の保存先。
+# `make seed` がこの対応表から教材の illustration.imagePath を埋める。
+images:
+- prompt: Summer evening in Yui's small, tidy bedroom. Yui sits at her wooden desk by an open window, a closed notebook and pencils in front of her, a few fireflies glowing softly in the garden outside. The AI assistant tablet stands on the desk.
+  imagePath: images/scenes/0c628b63b9ecb37c3aca5a055e1336cebc03e004126483d5f0f77a79e575e277.jpg
+- prompt: Close-up of Yui at her desk leaning toward the AI assistant tablet with a curious smile, chin resting on one hand, asking it a question. Warm lamp light, evening.
+  imagePath: images/scenes/5b23dc83dc1c28b817183ac9fce1799074d57bedffa164ef2d99b466cfcd459a.jpg
+- prompt: The AI assistant tablet on the desk, its round glowing face smiling confidently, with a soft floating picture of a small light bulb beside it. Yui's hands are visible at the edge of the desk.
+  imagePath: images/scenes/933a51be988e7e8841033394e530fcccd33045e0a50da04d59e60ac8dcce4cc0.jpg
+- prompt: Yui at her desk holding a pencil over an open notebook, smiling and about to write, the AI assistant tablet glowing beside her. Fireflies outside the window.
+  imagePath: images/scenes/d93f5c6d6a53fb7c299fd409ecb3ef51677574ff1e6e56b89ac27ffdf41238ed.jpg
+- prompt: A quiet junior high school classroom after school, warm late-afternoon sunlight through the windows. Sota sits at a desk grinning at a tablet; Yui walks over with her school bag.
+  imagePath: images/scenes/f00fd0cae0583910f7fb75b39a376a686b75155b96cb4484bb1880c34817d946.jpg
+- prompt: Sota excitedly holding up a tablet toward Yui in the classroom; the screen shows only soft blurred shapes of a group photo. Yui looks at it, surprised.
+  imagePath: images/scenes/903f06b84d32008954ad0c5f3a418e79865fb26f0b5f5eb3a5e47b23db13b5de.jpg
+- prompt: Yui standing beside Sota's desk in the sunny classroom, holding the strap of her school bag, looking worried and thoughtful, while Sota keeps looking at his tablet.
+  imagePath: images/scenes/e468a1cef85c7cfa194838f45270696f9b99b4f1e06f8267cc9d1929449ff8b1.jpg
+- prompt: Yui at the dining table at home in the evening with a blank sheet of writing paper and a pencil, resting her cheek on her hand and thinking hard. The AI assistant tablet lies on the table.
+  imagePath: images/scenes/1a947b822e6df8988140ab37fe5c739fbd1e812dcfd47fb4d71cce8e8f8daf68.jpg
+- prompt: 'The AI assistant tablet on the table, its glowing face smiling, with three soft floating picture bubbles above it: summer festival lanterns, a frosty winter morning, and cherry blossoms along a path to school.'
+  imagePath: images/scenes/7ef15857e7602f7f6c3196c531116b7406c9b9e3e1f2fc3ef1ecdc80ead5bef6.jpg
+- prompt: Yui sitting at the dining table looking at the AI assistant tablet with a hesitant, unsure expression, her pencil paused above the blank writing paper.
+  imagePath: images/scenes/cc00226879619d8ec89f0ad8c75d412c3deaad3fe9b908c6246c789fbd5d5393.jpg
+- prompt: Yui standing at the front of a bright classroom giving a short presentation with a poster of a firefly (no writing on it), while the teacher at the side tilts her head with a puzzled but kind expression.
+  imagePath: images/scenes/0bc9b1fd8d1bf0509e9641a5a86531cf4141e4391bf845945352ba6f2eb12fd7.jpg
+- prompt: Yui in a cozy, sunny public library sitting at a table with a large open insect picture book showing a firefly illustration, her finger following the page, eyes wide with discovery.
+  imagePath: images/scenes/9a2a8776362d6544254b954a087d24315935f0f47adb15103287809111df8069.jpg
+- prompt: In the classroom, the smiling teacher hands a neatly bound report back to a happy, proud Yui. Warm daylight.
+  imagePath: images/scenes/09376d78423bd6038e4af74de3ffbf4e72034e372828eeffe3415c75f46c86f8.jpg
+- prompt: 'Night at Yui''s desk: the AI assistant tablet glowing and nodding with a confident smile, while Yui looks at it with a slightly doubtful face.'
+  imagePath: images/scenes/26987ccd8bf5a75fc43ab04a2f68e75b95168309a1aebc2a5b2e280b8a884891.jpg
+- prompt: A school hallway where several students look at their tablets and whisper to each other; in the middle, Sota and Yui stand looking shocked and uneasy. Screens show only blurred shapes.
+  imagePath: images/scenes/9030e66f691673fb5b9550120f3da95573434049fcd14c957e17d75044799492.jpg
+- prompt: In the sunny classroom, Yui gently talks to Sota with a kind but serious face, one hand raised as if saying "wait"; Sota lowers his tablet and listens.
+  imagePath: images/scenes/0b829ab7bae7af72b6af46eb93fe926fdbc9fb1b2acf5ffd44fae2cf0d0fa7d9.jpg
+- prompt: The kind teacher crouching slightly beside Yui and Sota at a desk in the classroom, smiling warmly and explaining; both students listen and nod.
+  imagePath: images/scenes/d3f6d6b51685b49e91055b53b7cfce06dcbb52d5e1f13daaf18c30e46393fbd7.jpg
+- prompt: The next morning in the classroom, students gather in small worried groups around a tablet; Yui stands by the door with her school bag, looking regretful.
+  imagePath: images/scenes/cd7dd12a257026585e85855f63a9bccebf0e71e71ed791ef3094ab3ba245edba.jpg
+- prompt: Yui at the dining table holding up a finished sheet of writing paper covered in soft gray lines (no readable writing), looking at it with a puzzled, empty expression.
+  imagePath: images/scenes/66fae5e86fa41b745f9b78a38a15a4120b03ca232b9961c9647913375e7fc072.jpg
+- prompt: 'A warm memory scene at a summer night festival: Yui as a younger girl in a light yukata scooping goldfish with a paper scoop beside her smiling grandmother, paper lanterns glowing overhead.'
+  imagePath: images/scenes/bd970fe8a4910d395acc22299ea9d22ae5519d562a035d5bb292a5b1db6ac3bc.jpg
+- prompt: In the classroom, the teacher reads a sheet of writing paper with a delighted smile while Yui stands beside her, cheeks slightly pink, happy and proud.
+  imagePath: images/scenes/6a10be5ec79383573396fef30035af77ca1bf85e99cae1c2e0d0b00ff5e494c4.jpg
+- prompt: In the classroom, Sota holds his writing paper close to his chest with an awkward, troubled smile, while Yui stands in front of him with her hands together asking.
+  imagePath: images/scenes/a63f767a77b9ea2b075d6078a9324b31de7a419711eb584c9c406c27302040c5.jpg

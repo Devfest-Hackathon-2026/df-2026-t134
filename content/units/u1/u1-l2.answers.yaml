@@ -1,0 +1,45 @@
+u1-l2-q1:
+  type: choice
+  correctOptionId: c
+  explanation: |-
+    AI は、文章を書く・まとめる・アイデアを広げるのが得意だよ。
+    でも、学習していない身近な情報を答えたり、自分の答えが正しいと保証したりはできないんだ。
+
+u1-l2-q2:
+  type: choice
+  correctOptionId: b
+  explanation: |-
+    AI は、学習したときまでのデータをもとに予測するよ。
+    だから、そのあとに起きた出来事や、データにほとんど出てこない情報は苦手。
+    知らないことでも、それらしく答えてしまうことがあるんだ。
+
+u1-l2-q3:
+  type: choice
+  correctOptionId: b
+  explanation: |-
+    AI は「正しい文」ではなく「それらしい文」を予測しているよ。
+    だから、まちがっていても自然でもっともらしい文になって、自信があるように見えてしまうんだ。
+
+u1-l2-q4:
+  type: fill_blank
+  correctOptions:
+    term: c
+  explanation: |-
+    AI が事実とちがうことをもっともらしく答えてしまうことを「ハルシネーション」というよ。
+    もとは「幻覚」という意味のことばなんだ。
+
+u1-l2-q5:
+  type: choice
+  correctOptionId: b
+  explanation: |-
+    AI は、本当はない本の題名や作者を、それらしく作ってしまうことがあるよ。
+    本・記事の名前や、数字・日付・人の名前は、必ず自分で確かめよう。
+    俳句や書き出しのアイデアは正解が 1 つではないので、AI が得意な使い方だよ。
+
+u1-l2-q6:
+  type: order
+  correctOrder: [ask, predict, output, trust]
+  explanation: |-
+    AI は、よく知らないことを聞かれても「わかりません」と言うとは限らず、それらしい続きを予測してしまうよ。
+    できあがった文は自然なので、まちがいに気づきにくいんだ。
+    だから、使う人が確かめることが大切だよ。

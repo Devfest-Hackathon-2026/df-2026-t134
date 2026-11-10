@@ -1,0 +1,2152 @@
+{
+  "components": {
+    "schemas": {
+      "AgentAnswer": {
+        "additionalProperties": false,
+        "description": "The blocks the learner put into the agent. Order of tools does not matter.",
+        "properties": {
+          "ruleIds": {
+            "items": {
+              "maxLength": 64,
+              "minLength": 1,
+              "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+              "type": "string"
+            },
+            "maxItems": 4,
+            "title": "Ruleids",
+            "type": "array"
+          },
+          "toolIds": {
+            "items": {
+              "maxLength": 64,
+              "minLength": 1,
+              "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+              "type": "string"
+            },
+            "maxItems": 6,
+            "minItems": 1,
+            "title": "Toolids",
+            "type": "array"
+          },
+          "type": {
+            "const": "agent",
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "toolIds",
+          "ruleIds"
+        ],
+        "title": "AgentAnswer",
+        "type": "object"
+      },
+      "AgentResult": {
+        "additionalProperties": false,
+        "properties": {
+          "explanation": {
+            "title": "Explanation",
+            "type": "string"
+          },
+          "forbiddenToolIds": {
+            "description": "Forbidden tools the learner picked",
+            "items": {
+              "maxLength": 64,
+              "minLength": 1,
+              "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+              "type": "string"
+            },
+            "title": "Forbiddentoolids",
+            "type": "array"
+          },
+          "missingRuleIds": {
+            "items": {
+              "maxLength": 64,
+              "minLength": 1,
+              "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+              "type": "string"
+            },
+            "title": "Missingruleids",
+            "type": "array"
+          },
+          "missingToolIds": {
+            "items": {
+              "maxLength": 64,
+              "minLength": 1,
+              "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+              "type": "string"
+            },
+            "title": "Missingtoolids",
+            "type": "array"
+          },
+          "steps": {
+            "items": {
+              "$ref": "#/components/schemas/AgentStep"
+            },
+            "maxItems": 20,
+            "minItems": 1,
+            "title": "Steps",
+            "type": "array"
+          },
+          "type": {
+            "const": "agent",
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "steps",
+          "missingToolIds",
+          "missingRuleIds",
+          "forbiddenToolIds",
+          "explanation"
+        ],
+        "title": "AgentResult",
+        "type": "object"
+      },
+      "AgentStep": {
+        "additionalProperties": false,
+        "description": "One step of the agent run, shown in order. `tool_id` is set for tool and observe.",
+        "properties": {
+          "kind": {
+            "enum": [
+              "think",
+              "tool",
+              "observe",
+              "ask_human",
+              "answer",
+              "give_up"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "text": {
+            "title": "Text",
+            "type": "string"
+          },
+          "toolId": {
+            "anyOf": [
+              {
+                "maxLength": 64,
+                "minLength": 1,
+                "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Toolid"
+          }
+        },
+        "required": [
+          "kind",
+          "text"
+        ],
+        "title": "AgentStep",
+        "type": "object"
+      },
+      "ChoiceAnswer": {
+        "additionalProperties": false,
+        "properties": {
+          "optionId": {
+            "maxLength": 64,
+            "minLength": 1,
+            "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+            "title": "Optionid",
+            "type": "string"
+          },
+          "type": {
+            "const": "choice",
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "optionId"
+        ],
+        "title": "ChoiceAnswer",
+        "type": "object"
+      },
+      "ChoiceResult": {
+        "additionalProperties": false,
+        "properties": {
+          "correctOptionId": {
+            "maxLength": 64,
+            "minLength": 1,
+            "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+            "title": "Correctoptionid",
+            "type": "string"
+          },
+          "explanation": {
+            "title": "Explanation",
+            "type": "string"
+          },
+          "type": {
+            "const": "choice",
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "correctOptionId",
+          "explanation"
+        ],
+        "title": "ChoiceResult",
+        "type": "object"
+      },
+      "CompleteLessonResponse": {
+        "additionalProperties": false,
+        "properties": {
+          "lessonId": {
+            "maxLength": 64,
+            "minLength": 1,
+            "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+            "title": "Lessonid",
+            "type": "string"
+          },
+          "progress": {
+            "$ref": "#/components/schemas/ProgressSnapshot"
+          }
+        },
+        "required": [
+          "lessonId",
+          "progress"
+        ],
+        "title": "CompleteLessonResponse",
+        "type": "object"
+      },
+      "ErrorBody": {
+        "additionalProperties": false,
+        "properties": {
+          "code": {
+            "enum": [
+              "bad_request",
+              "unauthenticated",
+              "forbidden",
+              "not_found",
+              "conflict",
+              "rate_limited",
+              "not_implemented",
+              "upstream_unavailable",
+              "internal"
+            ],
+            "title": "Code",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ],
+        "title": "ErrorBody",
+        "type": "object"
+      },
+      "ErrorResponse": {
+        "additionalProperties": false,
+        "description": "Body of every non-2xx response.",
+        "properties": {
+          "error": {
+            "$ref": "#/components/schemas/ErrorBody"
+          }
+        },
+        "required": [
+          "error"
+        ],
+        "title": "ErrorResponse",
+        "type": "object"
+      },
+      "EvaluatePromptRequest": {
+        "additionalProperties": false,
+        "properties": {
+          "exerciseId": {
+            "maxLength": 64,
+            "minLength": 1,
+            "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+            "title": "Exerciseid",
+            "type": "string"
+          },
+          "prompt": {
+            "maxLength": 1000,
+            "minLength": 1,
+            "title": "Prompt",
+            "type": "string"
+          }
+        },
+        "required": [
+          "exerciseId",
+          "prompt"
+        ],
+        "title": "EvaluatePromptRequest",
+        "type": "object"
+      },
+      "FillBlankAnswer": {
+        "additionalProperties": false,
+        "properties": {
+          "selectedOptions": {
+            "maxProperties": 4,
+            "minProperties": 1,
+            "patternProperties": {
+              "^[a-z0-9]+(-[a-z0-9]+)*$": {
+                "maxLength": 64,
+                "minLength": 1,
+                "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+                "type": "string"
+              }
+            },
+            "propertyNames": {
+              "maxLength": 64,
+              "minLength": 1
+            },
+            "title": "Selectedoptions",
+            "type": "object"
+          },
+          "type": {
+            "const": "fill_blank",
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "selectedOptions"
+        ],
+        "title": "FillBlankAnswer",
+        "type": "object"
+      },
+      "FillBlankResult": {
+        "additionalProperties": false,
+        "properties": {
+          "correctOptions": {
+            "patternProperties": {
+              "^[a-z0-9]+(-[a-z0-9]+)*$": {
+                "maxLength": 64,
+                "minLength": 1,
+                "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+                "type": "string"
+              }
+            },
+            "propertyNames": {
+              "maxLength": 64,
+              "minLength": 1
+            },
+            "title": "Correctoptions",
+            "type": "object"
+          },
+          "explanation": {
+            "title": "Explanation",
+            "type": "string"
+          },
+          "type": {
+            "const": "fill_blank",
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "correctOptions",
+          "explanation"
+        ],
+        "title": "FillBlankResult",
+        "type": "object"
+      },
+      "HallucinationAnswer": {
+        "additionalProperties": false,
+        "description": "Indexes of the sentences the learner thinks are wrong. May be empty.",
+        "properties": {
+          "sentenceIndexes": {
+            "items": {
+              "type": "integer"
+            },
+            "maxItems": 12,
+            "title": "Sentenceindexes",
+            "type": "array"
+          },
+          "type": {
+            "const": "hallucination",
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "sentenceIndexes"
+        ],
+        "title": "HallucinationAnswer",
+        "type": "object"
+      },
+      "HallucinationError": {
+        "additionalProperties": false,
+        "properties": {
+          "correction": {
+            "minLength": 1,
+            "title": "Correction",
+            "type": "string"
+          },
+          "errorType": {
+            "enum": [
+              "number",
+              "date",
+              "name",
+              "fake_source",
+              "causality",
+              "fact"
+            ],
+            "title": "Errortype",
+            "type": "string"
+          },
+          "index": {
+            "minimum": 0.0,
+            "title": "Index",
+            "type": "integer"
+          },
+          "tip": {
+            "minLength": 1,
+            "title": "Tip",
+            "type": "string"
+          }
+        },
+        "required": [
+          "index",
+          "errorType",
+          "correction",
+          "tip"
+        ],
+        "title": "HallucinationError",
+        "type": "object"
+      },
+      "HallucinationResult": {
+        "additionalProperties": false,
+        "properties": {
+          "errors": {
+            "items": {
+              "$ref": "#/components/schemas/HallucinationError"
+            },
+            "title": "Errors",
+            "type": "array"
+          },
+          "falseAlarms": {
+            "description": "Correct sentences the learner tapped",
+            "items": {
+              "type": "integer"
+            },
+            "title": "Falsealarms",
+            "type": "array"
+          },
+          "found": {
+            "description": "Wrong sentences the learner tapped",
+            "items": {
+              "type": "integer"
+            },
+            "title": "Found",
+            "type": "array"
+          },
+          "missed": {
+            "description": "Wrong sentences the learner did not tap",
+            "items": {
+              "type": "integer"
+            },
+            "title": "Missed",
+            "type": "array"
+          },
+          "type": {
+            "const": "hallucination",
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "errors",
+          "found",
+          "missed",
+          "falseAlarms"
+        ],
+        "title": "HallucinationResult",
+        "type": "object"
+      },
+      "HealthResponse": {
+        "properties": {
+          "env": {
+            "enum": [
+              "local",
+              "test",
+              "prod"
+            ],
+            "title": "Env",
+            "type": "string"
+          },
+          "status": {
+            "const": "ok",
+            "title": "Status",
+            "type": "string"
+          },
+          "version": {
+            "title": "Version",
+            "type": "string"
+          }
+        },
+        "required": [
+          "status",
+          "version",
+          "env"
+        ],
+        "title": "HealthResponse",
+        "type": "object"
+      },
+      "Illustration": {
+        "additionalProperties": false,
+        "description": "A picture for a story scene. `prompt` describes it for the image model (authoring);\n`image_path` (Cloud Storage) is filled in by the content tools, never written by hand.",
+        "properties": {
+          "imagePath": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Imagepath"
+          },
+          "prompt": {
+            "minLength": 1,
+            "title": "Prompt",
+            "type": "string"
+          }
+        },
+        "required": [
+          "prompt"
+        ],
+        "title": "Illustration",
+        "type": "object"
+      },
+      "LiveCheckAnswer": {
+        "additionalProperties": false,
+        "description": "Indexes of the sentences of the session's answer that the learner thinks are wrong.",
+        "properties": {
+          "sentenceIndexes": {
+            "items": {
+              "type": "integer"
+            },
+            "maxItems": 12,
+            "title": "Sentenceindexes",
+            "type": "array"
+          },
+          "sessionId": {
+            "maxLength": 64,
+            "minLength": 1,
+            "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+            "title": "Sessionid",
+            "type": "string"
+          },
+          "type": {
+            "const": "live_check",
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "sessionId",
+          "sentenceIndexes"
+        ],
+        "title": "LiveCheckAnswer",
+        "type": "object"
+      },
+      "LiveCheckBlocked": {
+        "additionalProperties": false,
+        "description": "The prompt was not sent to the model (personal info, inappropriate, off the theme).\nNothing was recorded; the learner edits the prompt and tries again.",
+        "properties": {
+          "message": {
+            "title": "Message",
+            "type": "string"
+          },
+          "reasons": {
+            "items": {
+              "enum": [
+                "personal_info",
+                "inappropriate",
+                "off_topic"
+              ],
+              "type": "string"
+            },
+            "minItems": 1,
+            "title": "Reasons",
+            "type": "array"
+          },
+          "status": {
+            "const": "blocked",
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "status",
+          "reasons",
+          "message"
+        ],
+        "title": "LiveCheckBlocked",
+        "type": "object"
+      },
+      "LiveCheckResult": {
+        "additionalProperties": false,
+        "properties": {
+          "errors": {
+            "description": "The rewritten sentences",
+            "items": {
+              "$ref": "#/components/schemas/HallucinationError"
+            },
+            "title": "Errors",
+            "type": "array"
+          },
+          "falseAlarms": {
+            "items": {
+              "type": "integer"
+            },
+            "title": "Falsealarms",
+            "type": "array"
+          },
+          "found": {
+            "items": {
+              "type": "integer"
+            },
+            "title": "Found",
+            "type": "array"
+          },
+          "missed": {
+            "items": {
+              "type": "integer"
+            },
+            "title": "Missed",
+            "type": "array"
+          },
+          "sources": {
+            "description": "Google Search sources of the correct answer",
+            "items": {
+              "$ref": "#/components/schemas/WebSource"
+            },
+            "title": "Sources",
+            "type": "array"
+          },
+          "type": {
+            "const": "live_check",
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "errors",
+          "found",
+          "missed",
+          "falseAlarms",
+          "sources"
+        ],
+        "title": "LiveCheckResult",
+        "type": "object"
+      },
+      "LiveCheckStarted": {
+        "additionalProperties": false,
+        "properties": {
+          "errorCount": {
+            "maximum": 2.0,
+            "minimum": 1.0,
+            "title": "Errorcount",
+            "type": "integer"
+          },
+          "lookupsLeft": {
+            "minimum": 0.0,
+            "title": "Lookupsleft",
+            "type": "integer"
+          },
+          "sentences": {
+            "items": {
+              "$ref": "#/components/schemas/Sentence"
+            },
+            "maxItems": 12,
+            "minItems": 2,
+            "title": "Sentences",
+            "type": "array"
+          },
+          "sessionId": {
+            "maxLength": 64,
+            "minLength": 1,
+            "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+            "title": "Sessionid",
+            "type": "string"
+          },
+          "status": {
+            "const": "generated",
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "status",
+          "sessionId",
+          "sentences",
+          "errorCount",
+          "lookupsLeft"
+        ],
+        "title": "LiveCheckStarted",
+        "type": "object"
+      },
+      "LookupRequest": {
+        "additionalProperties": false,
+        "properties": {
+          "sentenceIndex": {
+            "minimum": 0.0,
+            "title": "Sentenceindex",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "sentenceIndex"
+        ],
+        "title": "LookupRequest",
+        "type": "object"
+      },
+      "LookupResponse": {
+        "additionalProperties": false,
+        "properties": {
+          "lookupsLeft": {
+            "minimum": 0.0,
+            "title": "Lookupsleft",
+            "type": "integer"
+          },
+          "sentenceIndex": {
+            "title": "Sentenceindex",
+            "type": "integer"
+          },
+          "sources": {
+            "items": {
+              "$ref": "#/components/schemas/WebSource"
+            },
+            "title": "Sources",
+            "type": "array"
+          }
+        },
+        "required": [
+          "sentenceIndex",
+          "sources",
+          "lookupsLeft"
+        ],
+        "title": "LookupResponse",
+        "type": "object"
+      },
+      "OrderAnswer": {
+        "additionalProperties": false,
+        "properties": {
+          "itemIds": {
+            "items": {
+              "maxLength": 64,
+              "minLength": 1,
+              "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+              "type": "string"
+            },
+            "maxItems": 8,
+            "minItems": 2,
+            "title": "Itemids",
+            "type": "array"
+          },
+          "type": {
+            "const": "order",
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "itemIds"
+        ],
+        "title": "OrderAnswer",
+        "type": "object"
+      },
+      "OrderResult": {
+        "additionalProperties": false,
+        "properties": {
+          "correctOrder": {
+            "items": {
+              "maxLength": 64,
+              "minLength": 1,
+              "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+              "type": "string"
+            },
+            "title": "Correctorder",
+            "type": "array"
+          },
+          "explanation": {
+            "title": "Explanation",
+            "type": "string"
+          },
+          "type": {
+            "const": "order",
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "correctOrder",
+          "explanation"
+        ],
+        "title": "OrderResult",
+        "type": "object"
+      },
+      "ProgressSnapshot": {
+        "additionalProperties": false,
+        "description": "Learner progress right after an action, returned so the app can update without a re-read.",
+        "properties": {
+          "streakDays": {
+            "minimum": 0.0,
+            "title": "Streakdays",
+            "type": "integer"
+          },
+          "xp": {
+            "minimum": 0.0,
+            "title": "Xp",
+            "type": "integer"
+          },
+          "xpGained": {
+            "minimum": 0.0,
+            "title": "Xpgained",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "xp",
+          "xpGained",
+          "streakDays"
+        ],
+        "title": "ProgressSnapshot",
+        "type": "object"
+      },
+      "PromptBlocked": {
+        "additionalProperties": false,
+        "description": "The prompt was not sent to the model, e.g. because it contains personal information.\n\nThis is an expected outcome (a teaching moment), not an error.",
+        "properties": {
+          "message": {
+            "title": "Message",
+            "type": "string"
+          },
+          "reasons": {
+            "items": {
+              "enum": [
+                "personal_info",
+                "inappropriate",
+                "off_topic"
+              ],
+              "type": "string"
+            },
+            "minItems": 1,
+            "title": "Reasons",
+            "type": "array"
+          },
+          "status": {
+            "const": "blocked",
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "status",
+          "reasons",
+          "message"
+        ],
+        "title": "PromptBlocked",
+        "type": "object"
+      },
+      "PromptEvaluated": {
+        "additionalProperties": false,
+        "properties": {
+          "attemptId": {
+            "maxLength": 64,
+            "minLength": 1,
+            "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+            "title": "Attemptid",
+            "type": "string"
+          },
+          "goodPoint": {
+            "title": "Goodpoint",
+            "type": "string"
+          },
+          "hint": {
+            "title": "Hint",
+            "type": "string"
+          },
+          "improvements": {
+            "items": {
+              "type": "string"
+            },
+            "maxItems": 2,
+            "minItems": 1,
+            "title": "Improvements",
+            "type": "array"
+          },
+          "progress": {
+            "$ref": "#/components/schemas/ProgressSnapshot"
+          },
+          "scores": {
+            "$ref": "#/components/schemas/RubricScores"
+          },
+          "status": {
+            "const": "evaluated",
+            "title": "Status",
+            "type": "string"
+          },
+          "total": {
+            "maximum": 10.0,
+            "minimum": 0.0,
+            "title": "Total",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "status",
+          "attemptId",
+          "total",
+          "scores",
+          "goodPoint",
+          "improvements",
+          "hint",
+          "progress"
+        ],
+        "title": "PromptEvaluated",
+        "type": "object"
+      },
+      "RubricScores": {
+        "additionalProperties": false,
+        "properties": {
+          "constraints": {
+            "maximum": 2.0,
+            "minimum": 0.0,
+            "title": "Constraints",
+            "type": "integer"
+          },
+          "context": {
+            "maximum": 2.0,
+            "minimum": 0.0,
+            "title": "Context",
+            "type": "integer"
+          },
+          "format": {
+            "maximum": 2.0,
+            "minimum": 0.0,
+            "title": "Format",
+            "type": "integer"
+          },
+          "purpose": {
+            "maximum": 2.0,
+            "minimum": 0.0,
+            "title": "Purpose",
+            "type": "integer"
+          },
+          "safety": {
+            "maximum": 2.0,
+            "minimum": 0.0,
+            "title": "Safety",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "purpose",
+          "context",
+          "constraints",
+          "format",
+          "safety"
+        ],
+        "title": "RubricScores",
+        "type": "object"
+      },
+      "Scene": {
+        "additionalProperties": false,
+        "description": "One panel of a story: who speaks, what they say, and optionally a picture.\n`audio_path` is filled in by the content tools (each speaker has its own voice).",
+        "properties": {
+          "audioPath": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Audiopath"
+          },
+          "illustration": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Illustration"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "speaker": {
+            "enum": [
+              "narrator",
+              "mascot",
+              "student",
+              "friend",
+              "teacher",
+              "ai"
+            ],
+            "title": "Speaker",
+            "type": "string"
+          },
+          "text": {
+            "minLength": 1,
+            "title": "Text",
+            "type": "string"
+          }
+        },
+        "required": [
+          "speaker",
+          "text"
+        ],
+        "title": "Scene",
+        "type": "object"
+      },
+      "Sentence": {
+        "additionalProperties": false,
+        "properties": {
+          "index": {
+            "minimum": 0.0,
+            "title": "Index",
+            "type": "integer"
+          },
+          "text": {
+            "minLength": 1,
+            "title": "Text",
+            "type": "string"
+          }
+        },
+        "required": [
+          "index",
+          "text"
+        ],
+        "title": "Sentence",
+        "type": "object"
+      },
+      "StartLiveCheckRequest": {
+        "additionalProperties": false,
+        "properties": {
+          "exerciseId": {
+            "maxLength": 64,
+            "minLength": 1,
+            "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+            "title": "Exerciseid",
+            "type": "string"
+          },
+          "prompt": {
+            "maxLength": 400,
+            "minLength": 1,
+            "title": "Prompt",
+            "type": "string"
+          }
+        },
+        "required": [
+          "exerciseId",
+          "prompt"
+        ],
+        "title": "StartLiveCheckRequest",
+        "type": "object"
+      },
+      "StoryAnswer": {
+        "additionalProperties": false,
+        "properties": {
+          "optionId": {
+            "maxLength": 64,
+            "minLength": 1,
+            "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+            "title": "Optionid",
+            "type": "string"
+          },
+          "type": {
+            "const": "story",
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "optionId"
+        ],
+        "title": "StoryAnswer",
+        "type": "object"
+      },
+      "StoryResult": {
+        "additionalProperties": false,
+        "properties": {
+          "bestOptionId": {
+            "maxLength": 64,
+            "minLength": 1,
+            "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+            "title": "Bestoptionid",
+            "type": "string"
+          },
+          "explanation": {
+            "title": "Explanation",
+            "type": "string"
+          },
+          "outcome": {
+            "description": "What happens after the learner's choice",
+            "items": {
+              "$ref": "#/components/schemas/Scene"
+            },
+            "title": "Outcome",
+            "type": "array"
+          },
+          "type": {
+            "const": "story",
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "bestOptionId",
+          "outcome",
+          "explanation"
+        ],
+        "title": "StoryResult",
+        "type": "object"
+      },
+      "SubmitAnswerRequest": {
+        "additionalProperties": false,
+        "properties": {
+          "answer": {
+            "discriminator": {
+              "mapping": {
+                "agent": "#/components/schemas/AgentAnswer",
+                "choice": "#/components/schemas/ChoiceAnswer",
+                "fill_blank": "#/components/schemas/FillBlankAnswer",
+                "hallucination": "#/components/schemas/HallucinationAnswer",
+                "live_check": "#/components/schemas/LiveCheckAnswer",
+                "order": "#/components/schemas/OrderAnswer",
+                "story": "#/components/schemas/StoryAnswer"
+              },
+              "propertyName": "type"
+            },
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/ChoiceAnswer"
+              },
+              {
+                "$ref": "#/components/schemas/OrderAnswer"
+              },
+              {
+                "$ref": "#/components/schemas/FillBlankAnswer"
+              },
+              {
+                "$ref": "#/components/schemas/HallucinationAnswer"
+              },
+              {
+                "$ref": "#/components/schemas/StoryAnswer"
+              },
+              {
+                "$ref": "#/components/schemas/LiveCheckAnswer"
+              },
+              {
+                "$ref": "#/components/schemas/AgentAnswer"
+              }
+            ],
+            "title": "Answer"
+          },
+          "exerciseId": {
+            "maxLength": 64,
+            "minLength": 1,
+            "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+            "title": "Exerciseid",
+            "type": "string"
+          }
+        },
+        "required": [
+          "exerciseId",
+          "answer"
+        ],
+        "title": "SubmitAnswerRequest",
+        "type": "object"
+      },
+      "SubmitAnswerResponse": {
+        "additionalProperties": false,
+        "properties": {
+          "attemptId": {
+            "maxLength": 64,
+            "minLength": 1,
+            "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+            "title": "Attemptid",
+            "type": "string"
+          },
+          "correct": {
+            "title": "Correct",
+            "type": "boolean"
+          },
+          "progress": {
+            "$ref": "#/components/schemas/ProgressSnapshot"
+          },
+          "result": {
+            "discriminator": {
+              "mapping": {
+                "agent": "#/components/schemas/AgentResult",
+                "choice": "#/components/schemas/ChoiceResult",
+                "fill_blank": "#/components/schemas/FillBlankResult",
+                "hallucination": "#/components/schemas/HallucinationResult",
+                "live_check": "#/components/schemas/LiveCheckResult",
+                "order": "#/components/schemas/OrderResult",
+                "story": "#/components/schemas/StoryResult"
+              },
+              "propertyName": "type"
+            },
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/ChoiceResult"
+              },
+              {
+                "$ref": "#/components/schemas/OrderResult"
+              },
+              {
+                "$ref": "#/components/schemas/FillBlankResult"
+              },
+              {
+                "$ref": "#/components/schemas/HallucinationResult"
+              },
+              {
+                "$ref": "#/components/schemas/StoryResult"
+              },
+              {
+                "$ref": "#/components/schemas/LiveCheckResult"
+              },
+              {
+                "$ref": "#/components/schemas/AgentResult"
+              }
+            ],
+            "title": "Result"
+          }
+        },
+        "required": [
+          "attemptId",
+          "correct",
+          "result",
+          "progress"
+        ],
+        "title": "SubmitAnswerResponse",
+        "type": "object"
+      },
+      "TtsRequest": {
+        "additionalProperties": false,
+        "properties": {
+          "attemptId": {
+            "maxLength": 64,
+            "minLength": 1,
+            "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+            "title": "Attemptid",
+            "type": "string"
+          }
+        },
+        "required": [
+          "attemptId"
+        ],
+        "title": "TtsRequest",
+        "type": "object"
+      },
+      "TtsResponse": {
+        "additionalProperties": false,
+        "properties": {
+          "storagePath": {
+            "title": "Storagepath",
+            "type": "string"
+          }
+        },
+        "required": [
+          "storagePath"
+        ],
+        "title": "TtsResponse",
+        "type": "object"
+      },
+      "WebSource": {
+        "additionalProperties": false,
+        "description": "A web page Google Search returned for the grounded answer.",
+        "properties": {
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "uri": {
+            "title": "Uri",
+            "type": "string"
+          }
+        },
+        "required": [
+          "title",
+          "uri"
+        ],
+        "title": "WebSource",
+        "type": "object"
+      }
+    },
+    "securitySchemes": {
+      "FirebaseIdToken": {
+        "bearerFormat": "JWT",
+        "description": "Firebase Authentication ID token of the signed-in (or anonymous) learner.",
+        "scheme": "bearer",
+        "type": "http"
+      }
+    }
+  },
+  "info": {
+    "title": "ailearn API",
+    "version": "0.1.0"
+  },
+  "openapi": "3.1.0",
+  "paths": {
+    "/v1/answers": {
+      "post": {
+        "description": "Grade an answer to a choice / order / fill_blank / hallucination exercise.\n\nEvery submission is recorded. XP is awarded for the first correct attempt per exercise.",
+        "operationId": "submit_answer_v1_answers_post",
+        "parameters": [
+          {
+            "description": "Firebase App Check token. Required when APP_CHECK_MODE=enforce (prod).",
+            "in": "header",
+            "name": "X-Firebase-AppCheck",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Firebase App Check token. Required when APP_CHECK_MODE=enforce (prod).",
+              "title": "X-Firebase-Appcheck"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SubmitAnswerRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubmitAnswerResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Bad Request"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Too Many Requests"
+          },
+          "501": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Not Implemented"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Service Unavailable"
+          }
+        },
+        "security": [
+          {
+            "FirebaseIdToken": []
+          }
+        ],
+        "summary": "Submit Answer",
+        "tags": [
+          "answers"
+        ]
+      }
+    },
+    "/v1/health": {
+      "get": {
+        "operationId": "get_health_v1_health_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Get Health",
+        "tags": [
+          "health"
+        ]
+      }
+    },
+    "/v1/lessons/{lesson_id}/complete": {
+      "post": {
+        "description": "Mark a lesson as completed once every exercise in it has an attempt (409 otherwise).\n\nAwards completion XP the first time and updates the streak (Asia/Tokyo calendar days).",
+        "operationId": "complete_lesson_v1_lessons__lesson_id__complete_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "lesson_id",
+            "required": true,
+            "schema": {
+              "maxLength": 64,
+              "minLength": 1,
+              "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+              "title": "Lesson Id",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Firebase App Check token. Required when APP_CHECK_MODE=enforce (prod).",
+            "in": "header",
+            "name": "X-Firebase-AppCheck",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Firebase App Check token. Required when APP_CHECK_MODE=enforce (prod).",
+              "title": "X-Firebase-Appcheck"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CompleteLessonResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Bad Request"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Conflict"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Too Many Requests"
+          },
+          "501": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Not Implemented"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Service Unavailable"
+          }
+        },
+        "security": [
+          {
+            "FirebaseIdToken": []
+          }
+        ],
+        "summary": "Complete Lesson",
+        "tags": [
+          "lessons"
+        ]
+      }
+    },
+    "/v1/live-checks": {
+      "post": {
+        "description": "Answer the learner's prompt with a grounded answer that has secretly rewritten sentences,\nor block the prompt (personal info, inappropriate, off the theme) without calling the model.\n429 rate_limited after the daily limit, 503 upstream_unavailable when AI is off.",
+        "operationId": "start_live_check_v1_live_checks_post",
+        "parameters": [
+          {
+            "description": "Firebase App Check token. Required when APP_CHECK_MODE=enforce (prod).",
+            "in": "header",
+            "name": "X-Firebase-AppCheck",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Firebase App Check token. Required when APP_CHECK_MODE=enforce (prod).",
+              "title": "X-Firebase-Appcheck"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StartLiveCheckRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "discriminator": {
+                    "mapping": {
+                      "blocked": "#/components/schemas/LiveCheckBlocked",
+                      "generated": "#/components/schemas/LiveCheckStarted"
+                    },
+                    "propertyName": "status"
+                  },
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/LiveCheckStarted"
+                    },
+                    {
+                      "$ref": "#/components/schemas/LiveCheckBlocked"
+                    }
+                  ],
+                  "title": "Response Start Live Check V1 Live Checks Post"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Bad Request"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Too Many Requests"
+          },
+          "501": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Not Implemented"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Service Unavailable"
+          }
+        },
+        "security": [
+          {
+            "FirebaseIdToken": []
+          }
+        ],
+        "summary": "Start Live Check",
+        "tags": [
+          "live checks"
+        ]
+      }
+    },
+    "/v1/live-checks/{session_id}/lookup": {
+      "post": {
+        "description": "Google Search sources for one sentence of the caller's session.\n404 for another learner's session, 409 conflict when no lookups are left or it is answered.",
+        "operationId": "lookup_sources_v1_live_checks__session_id__lookup_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "session_id",
+            "required": true,
+            "schema": {
+              "maxLength": 64,
+              "minLength": 1,
+              "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+              "title": "Session Id",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Firebase App Check token. Required when APP_CHECK_MODE=enforce (prod).",
+            "in": "header",
+            "name": "X-Firebase-AppCheck",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Firebase App Check token. Required when APP_CHECK_MODE=enforce (prod).",
+              "title": "X-Firebase-Appcheck"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LookupRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LookupResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Bad Request"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Too Many Requests"
+          },
+          "501": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Not Implemented"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Service Unavailable"
+          }
+        },
+        "security": [
+          {
+            "FirebaseIdToken": []
+          }
+        ],
+        "summary": "Lookup Sources",
+        "tags": [
+          "live checks"
+        ]
+      }
+    },
+    "/v1/prompt/evaluate": {
+      "post": {
+        "description": "Grade a learner's prompt with the rubric, or block it when it contains personal info.",
+        "operationId": "evaluate_prompt_v1_prompt_evaluate_post",
+        "parameters": [
+          {
+            "description": "Firebase App Check token. Required when APP_CHECK_MODE=enforce (prod).",
+            "in": "header",
+            "name": "X-Firebase-AppCheck",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Firebase App Check token. Required when APP_CHECK_MODE=enforce (prod).",
+              "title": "X-Firebase-Appcheck"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EvaluatePromptRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "discriminator": {
+                    "mapping": {
+                      "blocked": "#/components/schemas/PromptBlocked",
+                      "evaluated": "#/components/schemas/PromptEvaluated"
+                    },
+                    "propertyName": "status"
+                  },
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/PromptEvaluated"
+                    },
+                    {
+                      "$ref": "#/components/schemas/PromptBlocked"
+                    }
+                  ],
+                  "title": "Response Evaluate Prompt V1 Prompt Evaluate Post"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Bad Request"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Too Many Requests"
+          },
+          "501": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Not Implemented"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Service Unavailable"
+          }
+        },
+        "security": [
+          {
+            "FirebaseIdToken": []
+          }
+        ],
+        "summary": "Evaluate Prompt",
+        "tags": [
+          "prompt"
+        ]
+      }
+    },
+    "/v1/tts": {
+      "post": {
+        "description": "Return the audio of the feedback for one of the caller's attempts.",
+        "operationId": "synthesize_feedback_v1_tts_post",
+        "parameters": [
+          {
+            "description": "Firebase App Check token. Required when APP_CHECK_MODE=enforce (prod).",
+            "in": "header",
+            "name": "X-Firebase-AppCheck",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Firebase App Check token. Required when APP_CHECK_MODE=enforce (prod).",
+              "title": "X-Firebase-Appcheck"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TtsRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TtsResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Bad Request"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Unauthorized"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Forbidden"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Not Found"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Too Many Requests"
+          },
+          "501": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Not Implemented"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Service Unavailable"
+          }
+        },
+        "security": [
+          {
+            "FirebaseIdToken": []
+          }
+        ],
+        "summary": "Synthesize Feedback",
+        "tags": [
+          "tts"
+        ]
+      }
+    }
+  }
+}

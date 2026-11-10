@@ -1,0 +1,44 @@
+u1-l1-q1:
+  type: choice
+  correctOptionId: b
+  explanation: |-
+    生成 AI は、それまでの文の流れから「次に来そうなことば」を予測して、1 つずつつなげて文章をつくるよ。
+    検索の機能がついた AI もあるけれど、文章をつくるしくみの中心は「予測」なんだ。
+
+u1-l1-q2:
+  type: fill_blank
+  correctOptions:
+    next: b
+  explanation: |-
+    昔話では「おじいさんとおばあさん」という言い回しがとてもよく出てくるね。
+    AI もたくさんの文章からこのパターンを学んでいるので、「おばあさん」が来る確率が高いと予測するんだ。
+
+u1-l1-q3:
+  type: choice
+  correctOptionId: c
+  explanation: |-
+    AI は、本やウェブページなど大量の文章を使って「どんなことばの次に、どんなことばが来やすいか」を学ぶよ。
+    この作業を「学習」、使う文章を「学習データ」というんだ。
+
+u1-l1-q4:
+  type: order
+  correctOrder: [input, predict, append, repeat]
+  explanation: |-
+    AI は、入力された文に続くことばを予測して、つけたして、また予測して…をくり返して文章をつくるよ。
+    一度に全部の答えを考えているわけではないんだ。
+
+u1-l1-q5:
+  type: choice
+  correctOptionId: b
+  explanation: |-
+    AI は事実を確かめて「知っている」わけではなく、学んだパターンから「それらしい続き」を予測しているんだ。
+    だから、もっともらしいのにまちがった文をつくってしまうこともあるよ。
+
+u1-l1-q6:
+  type: fill_blank
+  correctOptions:
+    data: a
+    pattern: b
+  explanation: |-
+    AI が学んでいるのは、大量の文章データにある「ことばのつながり方」のパターンだよ。
+    「正しさ」を学んでいるわけではないから、答えが正しいかどうかは別に確かめる必要があるんだ。

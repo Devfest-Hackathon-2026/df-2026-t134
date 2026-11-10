@@ -1,41 +1,70 @@
-# 秘密情報（コミットしない）
+# ===== 機密情報 =====
 .env
 .env.*
 !.env.example
-.dev.vars
-.dev.vars.*
-!.dev.vars.example
 *.pem
 *.key
-*.p12
+secrets/
+*credentials*.json
 service-account*.json
-credentials*.json
-google-services.json
-GoogleService-Info.plist
 
-# 依存関係とビルドの成果物
+# ===== Claude Code 個人設定 =====
+CLAUDE.md
+CLAUDE.local.md
+.claude/
+AGENTS.md
+CLAUDE.local.md.example
+
+# ===== OS / エディタ =====
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+
+# ===== Node.js =====
 node_modules/
 dist/
 build/
-out/
 .next/
-.wrangler/
+.nuxt/
+out/
+coverage/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# ===== Python =====
 __pycache__/
-*.pyc
+*.py[cod]
 .venv/
 venv/
+.pytest_cache/
+.mypy_cache/
+*.egg-info/
 
-# OS とエディタ
-.DS_Store
-Thumbs.db
-.idea/
-.vscode/*
-!.vscode/extensions.json
+# ===== Firebase / Google Cloud =====
+.firebase/
+firebase-debug.log
+
+# ===== ログ・一時ファイル =====
 *.log
+logs/
+tmp/
+.cache/
 
-# Claude Code の設定・指示ファイル（コミットしない）
-.claude/
-**/CLAUDE.md
-**/CLAUDE.local.md
-**/CLAUDE.local.md.example
-.mcp.json
+# ===== Flutter / Dart =====
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+*.iml
+
+# ===== Python ツール =====
+.ruff_cache/
+
+# ===== Firebase Emulator =====
+firebase/.emulator-data/
+
+# ===== 作業用（並列作業のホワイトボードなど） =====
+.company/

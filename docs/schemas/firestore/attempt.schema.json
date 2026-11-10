@@ -1,0 +1,90 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "answer": {
+      "additionalProperties": true,
+      "title": "Answer",
+      "type": "object"
+    },
+    "correct": {
+      "anyOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Correct"
+    },
+    "createdAt": {
+      "format": "date-time",
+      "title": "Createdat",
+      "type": "string"
+    },
+    "exerciseId": {
+      "maxLength": 64,
+      "minLength": 1,
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+      "title": "Exerciseid",
+      "type": "string"
+    },
+    "feedbackText": {
+      "title": "Feedbacktext",
+      "type": "string"
+    },
+    "lessonId": {
+      "maxLength": 64,
+      "minLength": 1,
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+      "title": "Lessonid",
+      "type": "string"
+    },
+    "score": {
+      "anyOf": [
+        {
+          "maximum": 10,
+          "minimum": 0,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Score"
+    },
+    "type": {
+      "enum": [
+        "choice",
+        "order",
+        "fill_blank",
+        "hallucination",
+        "prompt",
+        "story",
+        "live_check",
+        "agent"
+      ],
+      "title": "Type",
+      "type": "string"
+    },
+    "xpGained": {
+      "minimum": 0,
+      "title": "Xpgained",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "exerciseId",
+    "lessonId",
+    "type",
+    "correct",
+    "score",
+    "answer",
+    "feedbackText",
+    "xpGained",
+    "createdAt"
+  ],
+  "title": "Attempt",
+  "type": "object"
+}

@@ -1,0 +1,424 @@
+{
+  "lesson": {
+    "id": "u1-l4",
+    "unitId": "u1",
+    "order": 4,
+    "title": "紙しばいで考えよう　ユイと AI",
+    "exerciseIds": [
+      "u1-l4-q1",
+      "u1-l4-q2",
+      "u1-l4-q3"
+    ],
+    "intro": {
+      "text": "今日は、中学2年生のユイのお話を、紙しばいで見ていこう。\nお話のとちゅうで「ユイはどうする？」と聞くから、いちばんいいと思うものをえらんでね！",
+      "audioPath": "audio/lines/f728d94e021beb523c533d9e853c0cca6c078eed0f1e3f27019562f8e2f4ce73.mp3"
+    }
+  },
+  "exercises": [
+    {
+      "id": "u1-l4-q1",
+      "lessonId": "u1-l4",
+      "question": "ユイはどうする？",
+      "type": "story",
+      "title": "自由研究と AI の答え",
+      "scenes": [
+        {
+          "speaker": "narrator",
+          "text": "夏休み。ユイは、自由研究で「ホタルが光るしくみ」を調べることにしました。",
+          "audioPath": "audio/lines/fa2ea86c8164bec6bf305f1b688a36a55627d1d2eb44edb4aa375a4e100a73f6.mp3",
+          "illustration": {
+            "prompt": "Summer evening in Yui's small, tidy bedroom. Yui sits at her wooden desk by an open window, a closed notebook and pencils in front of her, a few fireflies glowing softly in the garden outside. The AI assistant tablet stands on the desk.",
+            "imagePath": "images/scenes/0c628b63b9ecb37c3aca5a055e1336cebc03e004126483d5f0f77a79e575e277.jpg"
+          }
+        },
+        {
+          "speaker": "student",
+          "text": "ねえ AI、ホタルはどうして光るの？",
+          "audioPath": "audio/lines/f442e284e7529612923a3c277d083b681e632644591f73a7c6695dc1ab66663e.mp3",
+          "illustration": {
+            "prompt": "Close-up of Yui at her desk leaning toward the AI assistant tablet with a curious smile, chin resting on one hand, asking it a question. Warm lamp light, evening.",
+            "imagePath": "images/scenes/5b23dc83dc1c28b817183ac9fce1799074d57bedffa164ef2d99b466cfcd459a.jpg"
+          }
+        },
+        {
+          "speaker": "ai",
+          "text": "ホタルは、おしりの中で電気をつくって、豆電球のように光っています！",
+          "audioPath": "audio/lines/6c3c332bf96bcd5f1fc7dcebe3ed24d167f3417d9c84a3ad1137cf7b6b856265.mp3",
+          "illustration": {
+            "prompt": "The AI assistant tablet on the desk, its round glowing face smiling confidently, with a soft floating picture of a small light bulb beside it. Yui's hands are visible at the edge of the desk.",
+            "imagePath": "images/scenes/933a51be988e7e8841033394e530fcccd33045e0a50da04d59e60ac8dcce4cc0.jpg"
+          }
+        },
+        {
+          "speaker": "student",
+          "text": "わあ、すごく分かりやすい！　このままレポートに書いちゃおうかな。",
+          "audioPath": "audio/lines/40ad0584b44d12213af15bba48188106d28ac8cc1e73dd99f8ebf11af6e7e0ef.mp3",
+          "illustration": {
+            "prompt": "Yui at her desk holding a pencil over an open notebook, smiling and about to write, the AI assistant tablet glowing beside her. Fireflies outside the window.",
+            "imagePath": "images/scenes/d93f5c6d6a53fb7c299fd409ecb3ef51677574ff1e6e56b89ac27ffdf41238ed.jpg"
+          }
+        }
+      ],
+      "options": [
+        {
+          "id": "copy",
+          "text": "AI の答えを、そのままレポートに書く"
+        },
+        {
+          "id": "check",
+          "text": "図鑑や信頼できるサイトで、本当にそうか確かめてから書く"
+        },
+        {
+          "id": "ask-again",
+          "text": "AI に「本当？」と聞き直して、「はい」と言われたら書く"
+        }
+      ]
+    },
+    {
+      "id": "u1-l4-q2",
+      "lessonId": "u1-l4",
+      "question": "ユイはどうする？",
+      "type": "story",
+      "title": "ソウタのアイデア",
+      "scenes": [
+        {
+          "speaker": "narrator",
+          "text": "放課後の教室。ソウタが、タブレットを見ながら楽しそうにしています。",
+          "audioPath": "audio/lines/6de02fb7486bfffbd55719519aeef8743f6cdbf8b680371aede5326734c7bfa1.mp3",
+          "illustration": {
+            "prompt": "A quiet junior high school classroom after school, warm late-afternoon sunlight through the windows. Sota sits at a desk grinning at a tablet; Yui walks over with her school bag.",
+            "imagePath": "images/scenes/f00fd0cae0583910f7fb75b39a376a686b75155b96cb4484bb1880c34817d946.jpg"
+          }
+        },
+        {
+          "speaker": "friend",
+          "text": "見て！　クラスのみんなの写真を AI に入れて、おもしろい合成画像をつくろうと思うんだ。",
+          "audioPath": "audio/lines/d787f12a2bc5ccb0d311e201d265e9627104916a212289ed4a41c9df2e8da780.mp3",
+          "illustration": {
+            "prompt": "Sota excitedly holding up a tablet toward Yui in the classroom; the screen shows only soft blurred shapes of a group photo. Yui looks at it, surprised.",
+            "imagePath": "images/scenes/903f06b84d32008954ad0c5f3a418e79865fb26f0b5f5eb3a5e47b23db13b5de.jpg"
+          }
+        },
+        {
+          "speaker": "friend",
+          "text": "名前と住所も入れたら、もっとリアルなプロフィールができるかも！",
+          "audioPath": "audio/lines/647e74bdf9520a8ae0d36c78aea1228cc142a93791c1486c6702699a33859ae4.mp3"
+        },
+        {
+          "speaker": "student",
+          "text": "え……それって、大丈夫なのかな。",
+          "audioPath": "audio/lines/2dcdc837b9112a6fa3eec99b29874066207158f6b90325fc1064acf644bda3dc.mp3",
+          "illustration": {
+            "prompt": "Yui standing beside Sota's desk in the sunny classroom, holding the strap of her school bag, looking worried and thoughtful, while Sota keeps looking at his tablet.",
+            "imagePath": "images/scenes/e468a1cef85c7cfa194838f45270696f9b99b4f1e06f8267cc9d1929449ff8b1.jpg"
+          }
+        }
+      ],
+      "options": [
+        {
+          "id": "join",
+          "text": "おもしろそうだから、いっしょにつくる"
+        },
+        {
+          "id": "stop",
+          "text": "本人の許可なく写真や個人情報を入れないほうがいいと伝え、先生にも相談する"
+        },
+        {
+          "id": "ignore",
+          "text": "自分の写真じゃないから関係ないと思って、だまって帰る"
+        }
+      ]
+    },
+    {
+      "id": "u1-l4-q3",
+      "lessonId": "u1-l4",
+      "question": "ユイはどうする？",
+      "type": "story",
+      "title": "作文の宿題",
+      "scenes": [
+        {
+          "speaker": "narrator",
+          "text": "国語の宿題は「わたしの好きな季節」という作文。ユイは、何を書くか決められずにいます。",
+          "audioPath": "audio/lines/606c1d77fa289e927b6eb9618fae917bfe39e39a380cba20249088205c43908e.mp3",
+          "illustration": {
+            "prompt": "Yui at the dining table at home in the evening with a blank sheet of writing paper and a pencil, resting her cheek on her hand and thinking hard. The AI assistant tablet lies on the table.",
+            "imagePath": "images/scenes/1a947b822e6df8988140ab37fe5c739fbd1e812dcfd47fb4d71cce8e8f8daf68.jpg"
+          }
+        },
+        {
+          "speaker": "student",
+          "text": "そうだ、AI にアイデアを出してもらおうかな。",
+          "audioPath": "audio/lines/b01e461b905b2b9e93db222e624aac20c716236fd4183ce11663c1ef772ea7e8.mp3"
+        },
+        {
+          "speaker": "ai",
+          "text": "たとえば「夏祭りの思い出」「冬の朝の空気」「春の通学路」はどうでしょう？　作文をまるごと書くこともできますよ。",
+          "audioPath": "audio/lines/95c59ba2ba73efa9c210edb9dd519dab0e722c11e760c2a63ec8a86c90511d7a.mp3",
+          "illustration": {
+            "prompt": "The AI assistant tablet on the table, its glowing face smiling, with three soft floating picture bubbles above it: summer festival lanterns, a frosty winter morning, and cherry blossoms along a path to school.",
+            "imagePath": "images/scenes/7ef15857e7602f7f6c3196c531116b7406c9b9e3e1f2fc3ef1ecdc80ead5bef6.jpg"
+          }
+        },
+        {
+          "speaker": "student",
+          "text": "まるごと書いてくれるの？　どうしよう……。",
+          "audioPath": "audio/lines/a899d3a0b6a1d6d5d68deb6347bd4b346186cacf0b890c7b96d19dd787c1e1cd.mp3",
+          "illustration": {
+            "prompt": "Yui sitting at the dining table looking at the AI assistant tablet with a hesitant, unsure expression, her pencil paused above the blank writing paper.",
+            "imagePath": "images/scenes/cc00226879619d8ec89f0ad8c75d412c3deaad3fe9b908c6246c789fbd5d5393.jpg"
+          }
+        }
+      ],
+      "options": [
+        {
+          "id": "ai-writes",
+          "text": "AI に作文をまるごと書いてもらって、そのまま出す"
+        },
+        {
+          "id": "own-words",
+          "text": "アイデアを参考にして、自分の思い出を自分のことばで書く"
+        },
+        {
+          "id": "copy-friend",
+          "text": "AI は使わずに、友だちの作文を写させてもらう"
+        }
+      ]
+    }
+  ],
+  "answerKeys": {
+    "u1-l4-q1": {
+      "type": "story",
+      "bestOptionId": "check",
+      "outcomes": [
+        {
+          "optionId": "copy",
+          "scenes": [
+            {
+              "speaker": "narrator",
+              "text": "発表の日。ユイが「ホタルは電気で光ります」と発表すると、先生が首をかしげました。",
+              "audioPath": "audio/lines/a6029f1e81e9d0d22ca82238ff466064786c27a22d5692b6e9e07de715ced89f.mp3",
+              "illustration": {
+                "prompt": "Yui standing at the front of a bright classroom giving a short presentation with a poster of a firefly (no writing on it), while the teacher at the side tilts her head with a puzzled but kind expression.",
+                "imagePath": "images/scenes/0bc9b1fd8d1bf0509e9641a5a86531cf4141e4391bf845945352ba6f2eb12fd7.jpg"
+              }
+            },
+            {
+              "speaker": "teacher",
+              "text": "ホタルの光は、電気ではなく、体の中の化学反応なんだよ。どこで調べたのかな？",
+              "audioPath": "audio/lines/af8ffc2f008b3a6421df9053fc0f800f9923b58ab528ec5891acdbe85a6fe748.mp3"
+            },
+            {
+              "speaker": "student",
+              "text": "AI の答えを、そのまま書いちゃった……。確かめればよかったな。",
+              "audioPath": "audio/lines/4a057da8247c1cd3b6430e4283d813829788ec98188563425aa6600e79193b48.mp3"
+            }
+          ]
+        },
+        {
+          "optionId": "check",
+          "scenes": [
+            {
+              "speaker": "narrator",
+              "text": "ユイは図書館で、昆虫の図鑑を開きました。",
+              "audioPath": "audio/lines/48002bb8498ad6e1f97ffa9104e6fe945a0952ed2f6f950f31bbd28d0746b1de.mp3",
+              "illustration": {
+                "prompt": "Yui in a cozy, sunny public library sitting at a table with a large open insect picture book showing a firefly illustration, her finger following the page, eyes wide with discovery.",
+                "imagePath": "images/scenes/9a2a8776362d6544254b954a087d24315935f0f47adb15103287809111df8069.jpg"
+              }
+            },
+            {
+              "speaker": "student",
+              "text": "あれ？　電気じゃなくて、ルシフェリンという物質の化学反応で光るんだって！",
+              "audioPath": "audio/lines/fb1e06445b94e51e8563e9b287dfaabfb5549b50f6733e24dbcc84eededbe36f.mp3"
+            },
+            {
+              "speaker": "teacher",
+              "text": "よく確かめたね。調べた本の名前も書いてあって、すばらしいレポートだよ。",
+              "audioPath": "audio/lines/68a497493d5fe0edc942caf8cf0d70b83027d3c74558fa68b54011ebb9011835.mp3",
+              "illustration": {
+                "prompt": "In the classroom, the smiling teacher hands a neatly bound report back to a happy, proud Yui. Warm daylight.",
+                "imagePath": "images/scenes/09376d78423bd6038e4af74de3ffbf4e72034e372828eeffe3415c75f46c86f8.jpg"
+              }
+            }
+          ]
+        },
+        {
+          "optionId": "ask-again",
+          "scenes": [
+            {
+              "speaker": "student",
+              "text": "AI、それって本当？",
+              "audioPath": "audio/lines/2bf2e6b6876229ee5bf3f17173312a5e9dd2e6d4d49c939b18f0fe1dbab0b854.mp3"
+            },
+            {
+              "speaker": "ai",
+              "text": "はい、本当です！　ホタルは電気で光っています。",
+              "audioPath": "audio/lines/43c2c91f54fe42c38529dd98cb8a457a99612b5aeb6e660b97a7e8903a41143f.mp3",
+              "illustration": {
+                "prompt": "Night at Yui's desk: the AI assistant tablet glowing and nodding with a confident smile, while Yui looks at it with a slightly doubtful face.",
+                "imagePath": "images/scenes/26987ccd8bf5a75fc43ab04a2f68e75b95168309a1aebc2a5b2e280b8a884891.jpg"
+              }
+            },
+            {
+              "speaker": "narrator",
+              "text": "でも、AI に聞き直しても、確かめたことにはなりません。ユイは、まちがったまま書いてしまいました。",
+              "audioPath": "audio/lines/4c946b5edff7d3371f7a1469f92266dbcc4be8f6f1d83be836bf7a9d5e2480b4.mp3"
+            }
+          ]
+        }
+      ],
+      "explanation": "AI は、まちがったことでも自信たっぷりに、分かりやすく答えることがあるよ。\nホタルが光るのは電気ではなく、ルシフェリンという物質が、ルシフェラーゼという酵素のはたらきで酸素と反応する「化学反応」のおかげなんだ。\nAI に聞き直しても確かめたことにはならないから、図鑑や教科書など、AI 以外の情報源で確かめよう。"
+    },
+    "u1-l4-q2": {
+      "type": "story",
+      "bestOptionId": "stop",
+      "outcomes": [
+        {
+          "optionId": "join",
+          "scenes": [
+            {
+              "speaker": "narrator",
+              "text": "できた画像は、あっという間にほかのクラスにまで広まってしまいました。",
+              "audioPath": "audio/lines/27e2087799c110456fa1b178d02174250d2a18dba722ec8851138b284c7b663a.mp3",
+              "illustration": {
+                "prompt": "A school hallway where several students look at their tablets and whisper to each other; in the middle, Sota and Yui stand looking shocked and uneasy. Screens show only blurred shapes.",
+                "imagePath": "images/scenes/9030e66f691673fb5b9550120f3da95573434049fcd14c957e17d75044799492.jpg"
+              }
+            },
+            {
+              "speaker": "friend",
+              "text": "こんなに広まるなんて……。消しても、もう全部は消せないよ。",
+              "audioPath": "audio/lines/e9f23dd698a79ec6725093b4bd09776add0d0b04c80681fac7abb0d8eb4ac19f.mp3"
+            },
+            {
+              "speaker": "narrator",
+              "text": "写真を使われた友だちは、とても悲しい気持ちになりました。",
+              "audioPath": "audio/lines/0a1c3bef48391793846a281bfefb7f2e7b15dc56ad35089915f65b72e0002fa9.mp3"
+            }
+          ]
+        },
+        {
+          "optionId": "stop",
+          "scenes": [
+            {
+              "speaker": "student",
+              "text": "友だちの写真や住所は、その人の大切な個人情報だよ。勝手に AI に入れるのはやめよう。",
+              "audioPath": "audio/lines/df10d629668a0e41312a18316875d641f4ee038e5c44c0d420b482d5d6528800.mp3",
+              "illustration": {
+                "prompt": "In the sunny classroom, Yui gently talks to Sota with a kind but serious face, one hand raised as if saying \"wait\"; Sota lowers his tablet and listens.",
+                "imagePath": "images/scenes/0b829ab7bae7af72b6af46eb93fe926fdbc9fb1b2acf5ffd44fae2cf0d0fa7d9.jpg"
+              }
+            },
+            {
+              "speaker": "teacher",
+              "text": "よく止めてくれたね。入れる前に「本人はいいと言っているかな？」と考えるのが大事だよ。",
+              "audioPath": "audio/lines/128214d9e4c1b9bdf4831f539904410a5a43b7c2d5cb7e5534ac5111e4d6fcb0.mp3",
+              "illustration": {
+                "prompt": "The kind teacher crouching slightly beside Yui and Sota at a desk in the classroom, smiling warmly and explaining; both students listen and nod.",
+                "imagePath": "images/scenes/d3f6d6b51685b49e91055b53b7cfce06dcbb52d5e1f13daaf18c30e46393fbd7.jpg"
+              }
+            },
+            {
+              "speaker": "friend",
+              "text": "そっか……。じゃあ、自分で描いたイラストでつくってみるよ！",
+              "audioPath": "audio/lines/e6f84aacc6857698c291fd1c895dad9e4b792a1da5eec6c6849a06e8001403f6.mp3"
+            }
+          ]
+        },
+        {
+          "optionId": "ignore",
+          "scenes": [
+            {
+              "speaker": "narrator",
+              "text": "次の日、ソウタがつくった画像のことで、クラスは大さわぎになっていました。",
+              "audioPath": "audio/lines/66341fe0e11648c83f3cc43f555f6587ebb5610c956943b6061ad7392a389327.mp3",
+              "illustration": {
+                "prompt": "The next morning in the classroom, students gather in small worried groups around a tablet; Yui stands by the door with her school bag, looking regretful.",
+                "imagePath": "images/scenes/cd7dd12a257026585e85855f63a9bccebf0e71e71ed791ef3094ab3ba245edba.jpg"
+              }
+            },
+            {
+              "speaker": "student",
+              "text": "あのとき、ひとこと言えばよかったな……。",
+              "audioPath": "audio/lines/54c19fc77628dd0abe3fe9f74cde41c33309d607648497564b262de4ac54471c.mp3"
+            }
+          ]
+        }
+      ],
+      "explanation": "写真・名前・住所などの個人情報は、本人の許可なく AI に入れたり、ネットに出したりしてはいけないよ。\n一度広まった画像や情報は、完全に消すのがとてもむずかしいんだ。\n友だちが困ったことをしそうなときは、やさしく止めて、先生やおうちの人にも相談しよう。"
+    },
+    "u1-l4-q3": {
+      "type": "story",
+      "bestOptionId": "own-words",
+      "outcomes": [
+        {
+          "optionId": "ai-writes",
+          "scenes": [
+            {
+              "speaker": "narrator",
+              "text": "作文はすぐにできあがりました。でも、読み返しても、自分の作文という気がしません。",
+              "audioPath": "audio/lines/b47590d91045b40c5e9ce6d6f8e34529e6bb526e8cbaaca97b455762b54018fd.mp3",
+              "illustration": {
+                "prompt": "Yui at the dining table holding up a finished sheet of writing paper covered in soft gray lines (no readable writing), looking at it with a puzzled, empty expression.",
+                "imagePath": "images/scenes/66fae5e86fa41b745f9b78a38a15a4120b03ca232b9961c9647913375e7fc072.jpg"
+              }
+            },
+            {
+              "speaker": "teacher",
+              "text": "上手な文だけど、ユイさんらしさが見えないな。あなたが本当に感じたことを聞かせてほしいな。",
+              "audioPath": "audio/lines/a56c2985f9f3ee4a95d55a7839a7d5143a5754174bf139c43a98bcd6fc70b434.mp3"
+            }
+          ]
+        },
+        {
+          "optionId": "own-words",
+          "scenes": [
+            {
+              "speaker": "student",
+              "text": "夏祭りの思い出……そういえば、おばあちゃんといっしょに金魚すくいをしたっけ。",
+              "audioPath": "audio/lines/17dd08efe8d7d0f856933a7c26f8aa76d972fb84f0553741d4b21c7cb3888376.mp3",
+              "illustration": {
+                "prompt": "A warm memory scene at a summer night festival: Yui as a younger girl in a light yukata scooping goldfish with a paper scoop beside her smiling grandmother, paper lanterns glowing overhead.",
+                "imagePath": "images/scenes/bd970fe8a4910d395acc22299ea9d22ae5519d562a035d5bb292a5b1db6ac3bc.jpg"
+              }
+            },
+            {
+              "speaker": "narrator",
+              "text": "ユイは、そのときの気持ちを思い出しながら、自分のことばで書きました。",
+              "audioPath": "audio/lines/bfdf598d21804cbbc4ca6a46ebfb5063ebdbf1012043a04efd2281d740c6e481.mp3"
+            },
+            {
+              "speaker": "teacher",
+              "text": "金魚すくいの場面、ユイさんのうれしい気持ちが伝わってくるね！",
+              "audioPath": "audio/lines/9b68532fadc002125ebec53ca143b5affe38fd7be8d8ea7226606da3c44ee084.mp3",
+              "illustration": {
+                "prompt": "In the classroom, the teacher reads a sheet of writing paper with a delighted smile while Yui stands beside her, cheeks slightly pink, happy and proud.",
+                "imagePath": "images/scenes/6a10be5ec79383573396fef30035af77ca1bf85e99cae1c2e0d0b00ff5e494c4.jpg"
+              }
+            }
+          ]
+        },
+        {
+          "optionId": "copy-friend",
+          "scenes": [
+            {
+              "speaker": "friend",
+              "text": "え、ぼくの作文を写すの？　それはちょっと……。",
+              "audioPath": "audio/lines/3360a279fe80c32de6f0900ef491d788c823d3e48f05654cc937590e9655502b.mp3",
+              "illustration": {
+                "prompt": "In the classroom, Sota holds his writing paper close to his chest with an awkward, troubled smile, while Yui stands in front of him with her hands together asking.",
+                "imagePath": "images/scenes/a63f767a77b9ea2b075d6078a9324b31de7a419711eb584c9c406c27302040c5.jpg"
+              }
+            },
+            {
+              "speaker": "narrator",
+              "text": "人の作文を写すのも、AI に書かせてそのまま出すのも、自分の力にはなりません。",
+              "audioPath": "audio/lines/9170799aa997caa3797f602e540e5ce0bdb33e2cf4cbbc5794c958df7c1ef777.mp3"
+            }
+          ]
+        }
+      ],
+      "explanation": "AI は、アイデアを広げる助っ人として使おう。作文は、自分の体験や気持ちを、自分のことばで書くものだよ。\nAI が書いた文章をそのまま出すのは、自分の作品とは言えないんだ。\n宿題で AI を使ってよいかどうかは、学校のルールも確認しよう。"
+    }
+  }
+}

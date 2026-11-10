@@ -1,0 +1,99 @@
+lesson:
+  id: u1-l1
+  unitId: u1
+  order: 1
+  title: AI はどうやって文章をつくる？
+  exerciseIds: [u1-l1-q1, u1-l1-q2, u1-l1-q3, u1-l1-q4, u1-l1-q5, u1-l1-q6]
+  intro:
+    text: |-
+      こんにちは！今日は、AI がどうやって文章をつくっているのか、のぞいてみよう。
+      じつは AI は「次に来ることば」を予想するのがとても得意なんだ。
+
+exercises:
+  - id: u1-l1-q1
+    lessonId: u1-l1
+    type: choice
+    question: 生成 AI が文章をつくるとき、中心になっているしくみはどれ？
+    options:
+      - id: a
+        text: 正しい答えがのっている辞書から、答えをそのまま探してくる
+      - id: b
+        text: それまでの文の続きとして、次に来そうなことばを予測する
+      - id: c
+        text: 人間のスタッフが、その場で答えを打ちこんでいる
+      - id: d
+        text: インターネットのページを 1 つ選んで、丸ごとコピーしている
+
+  - id: u1-l1-q2
+    lessonId: u1-l1
+    type: fill_blank
+    question: AI になったつもりで、空らんに入る可能性がいちばん高いことばを選ぼう。
+    template: むかしむかし、あるところに、おじいさんと{{next}}が住んでいました。
+    blanks:
+      - id: next
+        options:
+          - id: a
+            text: ロケット
+          - id: b
+            text: おばあさん
+          - id: c
+            text: 信号機
+
+  - id: u1-l1-q3
+    lessonId: u1-l1
+    type: choice
+    question: AI は「ことばのつながり方」を、何から学んでいる？
+    options:
+      - id: a
+        text: 使っている人の頭の中を読みとって学んでいる
+      - id: b
+        text: 生まれたときから、すべてのことばを知っている
+      - id: c
+        text: 本やウェブページなど、大量の文章データから学んでいる
+
+  - id: u1-l1-q4
+    lessonId: u1-l1
+    type: order
+    question: AI が質問に答えて文章をつくる流れを、正しい順番にならべよう。
+    items:
+      - id: repeat
+        text: これをくり返して、長い文章ができあがる
+      - id: input
+        text: 人が質問や指示を入力する
+      - id: append
+        text: 選んだことばを、文の最後につけたす
+      - id: predict
+        text: 次に来そうなことばを予測して、1 つ選ぶ
+
+  - id: u1-l1-q5
+    lessonId: u1-l1
+    type: choice
+    question: 「AI は質問の答えを『知っている』から答えられる」。これは正しい？
+    options:
+      - id: a
+        text: 正しい
+      - id: b
+        text: 正しくない
+
+  - id: u1-l1-q6
+    lessonId: u1-l1
+    type: fill_blank
+    question: 空らんに入ることばを選んで、生成 AI のしくみの説明を完成させよう。
+    template: 生成 AI は、大量の{{data}}から、ことばの{{pattern}}を学び、次に来ることばを予測している。
+    blanks:
+      - id: data
+        options:
+          - id: a
+            text: 文章データ
+          - id: b
+            text: 天気の記録
+          - id: c
+            text: 人の記憶
+      - id: pattern
+        options:
+          - id: a
+            text: 正しさ
+          - id: b
+            text: つながり方
+          - id: c
+            text: 色

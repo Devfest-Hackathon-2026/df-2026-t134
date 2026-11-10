@@ -1,0 +1,92 @@
+lesson:
+  id: u1-l2
+  unitId: u1
+  order: 2
+  title: AI の得意なこと・苦手なこと
+  exerciseIds: [u1-l2-q1, u1-l2-q2, u1-l2-q3, u1-l2-q4, u1-l2-q5, u1-l2-q6]
+  intro:
+    text: |-
+      AI はとても便利だけど、なんでもできるわけじゃないんだ。
+      得意なことと苦手なことを知って、上手につきあおう！
+
+exercises:
+  - id: u1-l2-q1
+    lessonId: u1-l2
+    type: choice
+    question: 生成 AI が得意なことはどれ？
+    options:
+      - id: a
+        text: 今日の自分のクラスの時間割を、正確に答えること
+      - id: b
+        text: 自分の答えが本当に正しいか確かめて、保証すること
+      - id: c
+        text: 文章の下書きや、アイデアをたくさん出すこと
+
+  - id: u1-l2-q2
+    lessonId: u1-l2
+    type: choice
+    question: 生成 AI が苦手なことはどれ？
+    options:
+      - id: a
+        text: 長い文章を、短くまとめること
+      - id: b
+        text: 最近の出来事や、学習データにない情報を正確に答えること
+      - id: c
+        text: むずかしい文を、やさしいことばで言いかえること
+      - id: d
+        text: 英語の文を、日本語に訳すこと
+
+  - id: u1-l2-q3
+    lessonId: u1-l2
+    type: choice
+    question: AI がまちがったことを、自信たっぷりに答えてしまうことがあるのはなぜ？
+    options:
+      - id: a
+        text: AI が、わざと人をだまそうとしているから
+      - id: b
+        text: 正しいかどうかではなく、それらしいことばの続きを予測しているから
+      - id: c
+        text: 質問する人のことばづかいが、ていねいすぎたから
+      - id: d
+        text: AI は計算がとても速いので、まちがえることはないから
+
+  - id: u1-l2-q4
+    lessonId: u1-l2
+    type: fill_blank
+    question: 空らんに入ることばを選ぼう。
+    template: AI が、事実とちがうことをもっともらしく答えてしまうことを「{{term}}」という。
+    blanks:
+      - id: term
+        options:
+          - id: a
+            text: ダウンロード
+          - id: b
+            text: プログラミング
+          - id: c
+            text: ハルシネーション
+
+  - id: u1-l2-q5
+    lessonId: u1-l2
+    type: choice
+    question: AI に次のことをたのんだ。答えを自分でとくに確かめたほうがいいのはどれ？
+    options:
+      - id: a
+        text: 「春」をテーマにした俳句のアイデアを出してもらう
+      - id: b
+        text: 調べ学習で使う本の題名と、その作者を教えてもらう
+      - id: c
+        text: 自己紹介文の書き出しの例をいくつか出してもらう
+
+  - id: u1-l2-q6
+    lessonId: u1-l2
+    type: order
+    question: AI がまちがった答えをつくってしまうまでの流れを、正しい順番にならべよう。
+    items:
+      - id: output
+        text: 事実とちがうのに、自然でもっともらしい文章ができあがる
+      - id: trust
+        text: 確かめずに信じると、まちがいが広がってしまう
+      - id: ask
+        text: 学習データにほとんど出てこないことを質問される
+      - id: predict
+        text: それでも AI は、それらしいことばの続きを予測する

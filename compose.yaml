@@ -1,0 +1,105 @@
+# Local development environment. See README.md for usage.
+# Values can be overridden with a local .env file (copy from .env.example).
+name: ailearn
+
+services:
+  firebase:
+    build: docker/firebase
+    init: true
+    working_dir: /workspace
+    command: firebase emulators:start --project ${FIREBASE_PROJECT_ID:-demo-ailearn}
+    volumes:
+      - ./firebase.json:/workspace/firebase.json:ro
+      - ./.firebaserc:/workspace/.firebaserc:ro
+      - ./firebase:/workspace/firebase:ro
+    ports:
+      - "4000:4000" # Emulator UI
+      - "4400:4400" # Emulator hub
+      - "4500:4500" # Emulator logging
+      - "8080:8080" # Firestore
+      - "9099:9099" # Auth
+      - "9199:9199" # Storage
+
+  api:
+    build:
+      context: api
+      target: dev
+    environment:
+      APP_ENV: local
+      # The Flutter app does not send App Check tokens to the emulators. Never "disabled" in prod.
+      APP_CHECK_MODE: ${APP_CHECK_MODE:-disabled}
+      FIREBASE_PROJECT_ID: ${FIREBASE_PROJECT_ID:-demo-ailearn}
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:3000}
+      FIRESTORE_EMULATOR_HOST: firebase:8080
+      FIREBASE_AUTH_EMULATOR_HOST: firebase:9099
+      FIREBASE_STORAGE_EMULATOR_HOST: firebase:9199
+    volumes:
+      - ./api:/srv
+      # Keep the image's virtualenv instead of a host one.
+      - /srv/.venv
+    ports:
+      - "8000:8000"
+    depends_on:
+      - firebase
+
+  app:
+    build: docker/flutter
+    image: ailearn-flutter:dev
+    working_dir: /workspace/app
+    # pub get first so the bind-mounted .dart_tool always matches the pub-cache volume.
+    # The FIREBASE_* values are the offline emulator config (demo project, dummy
+    # keys); the browser reaches the emulators on localhost:9099 / localhost:8080.
+    command: >
+      sh -c "flutter pub get &&
+      flutter run -d web-server
+      --web-hostname 0.0.0.0 --web-port 3000
+      --dart-define=API_BASE_URL=${API_BASE_URL:-http://localhost:8000}
+      --dart-define=FIREBASE_BACKEND=emulator
+      --dart-define=FIREBASE_PROJECT_ID=${FIREBASE_PROJECT_ID:-demo-ailearn}
+      --dart-define=FIREBASE_API_KEY=demo-api-key
+      --dart-define=FIREBASE_APP_ID=1:000000000000:web:0000000000000000
+      --dart-define=FIREBASE_MESSAGING_SENDER_ID=000000000000
+      --dart-define=FIREBASE_STORAGE_BUCKET=${FIREBASE_PROJECT_ID:-demo-ailearn}.appspot.com
+      --dart-define=FIREBASE_AUTH_DOMAIN=${FIREBASE_PROJECT_ID:-demo-ailearn}.firebaseapp.com"
+    stdin_open: true
+    tty: true
+    volumes:
+      - ./app:/workspace/app
+      - pub-cache:/opt/pub-cache
+    ports:
+      - "3000:3000"
+    depends_on:
+      - api
+
+  # Content tools (validate / seed). Not started by `make up`; use the make targets.
+  tools:
+    build: tools
+    profiles: ["tools"]
+    environment:
+      FIREBASE_PROJECT_ID: ${FIREBASE_PROJECT_ID:-demo-ailearn}
+      FIRESTORE_EMULATOR_HOST: firebase:8080
+      # The content contracts are imported from the API source (app.schemas.content).
+      PYTHONPATH: /repo/api
+    volumes:
+      - ./tools:/repo/tools
+      - ./content:/repo/content:ro
+      - ./api:/repo/api:ro
+    depends_on:
+      - firebase
+
+  # Firestore emulator for `make check-api-integration`. No published ports, so it runs next
+  # to `make up` (and other checkouts) without clashing; containers reach it as firestore-test:8080.
+  firestore-test:
+    build: docker/firebase
+    profiles: ["integration"]
+    init: true
+    working_dir: /workspace
+    command: firebase emulators:start --only firestore --project ${FIREBASE_PROJECT_ID:-demo-ailearn}
+    volumes:
+      - ./firebase.json:/workspace/firebase.json:ro
+      - ./.firebaserc:/workspace/.firebaserc:ro
+      - ./firebase:/workspace/firebase:ro
+
+volumes:
+  pub-cache:
+  rules-test-node-modules:

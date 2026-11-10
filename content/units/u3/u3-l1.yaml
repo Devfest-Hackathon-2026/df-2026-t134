@@ -1,0 +1,65 @@
+lesson:
+  id: u3-l1
+  unitId: u3
+  order: 1
+  title: AI の答えを探偵しよう
+  exerciseIds: [u3-l1-q1, u3-l1-q2, u3-l1-q3, u3-l1-q4]
+  intro:
+    text: |-
+      今日は探偵になって、本物の AI の答えを調べるよ。
+      AI の答えには、こっそりまちがいがまぎれこんでいるんだ。出典を手がかりに見つけ出そう！
+
+exercises:
+  - id: u3-l1-q1
+    lessonId: u3-l1
+    type: choice
+    question: AI の答えが正しいか確かめるとき、いちばん手がかりになるのはどれ？
+    options:
+      - id: a
+        text: 同じ質問を AI にもう一度して、同じ答えが返ってくるか見る
+      - id: b
+        text: 答えのもとになったウェブページ（出典）を開いて、書いてあることと見くらべる
+      - id: c
+        text: AI が自信のある言い方をしているかどうかを見る
+
+  - id: u3-l1-q2
+    lessonId: u3-l1
+    type: choice
+    question: 出典のウェブページを見るときに、とくに気をつけたいことはどれ？
+    options:
+      - id: a
+        text: だれが書いたページか（国や博物館などの公的な機関か）と、いつの情報かを確かめる
+      - id: b
+        text: 検索結果のいちばん上に出てきたページなら、内容を読まずに信じてよい
+      - id: c
+        text: 写真やイラストが多いページほど、正しいと考える
+
+  - id: u3-l1-q3
+    lessonId: u3-l1
+    type: live_check
+    question: AI に富士山のことを質問しよう。答えの中に、まちがった文が 1 つまぎれこんでいるよ。
+    intro:
+      text: 例をタップしてもいいし、自分で質問を考えてもいいよ。「調べる」で出典を見られるのは 2 回までだよ。
+    theme: 富士山
+    suggestions:
+      - 富士山の高さと、どこにあるかを教えて
+      - 富士山が世界遺産になったのはいつ？
+      - 富士山はどうやってできた山なの？
+    errorCount: 1
+    lookupLimit: 2
+    maxLength: 200
+
+  - id: u3-l1-q4
+    lessonId: u3-l1
+    type: live_check
+    question: AI に太陽系の惑星のことを質問しよう。今度はまちがった文が 2 つあるよ。
+    intro:
+      text: 数字や順番は、まちがいがまぎれこみやすいところ。あやしい文から調べてみよう！
+    theme: 太陽系の惑星
+    suggestions:
+      - 太陽系の惑星を、太陽に近い順に教えて
+      - 太陽系でいちばん大きい惑星はどれ？
+      - 地球と火星はどうちがうの？
+    errorCount: 2
+    lookupLimit: 3
+    maxLength: 200

@@ -1,0 +1,67 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  api:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Build dev image
+        run: docker compose build api
+      - name: Lint, format check, tests
+        run: make check-api
+      - name: Exported contracts are up to date
+        run: make check-schemas
+      - name: Build Cloud Run image
+        run: make build-api-prod
+
+  api-integration:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Build API, tools and emulator images
+        run: docker compose build api tools firestore-test
+      - name: Seed Unit 1 and test the learning API against Firestore
+        run: make check-api-integration
+
+  app:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Build Flutter image
+        run: docker compose build app
+      - name: Analyze and test
+        run: make check-app
+      - name: Build web release
+        run: make build-web
+        env:
+          API_BASE_URL: https://api.example.invalid
+
+  firebase:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Build emulator image
+        run: docker compose build firebase
+      - name: Security rules tests
+        run: make check-rules
+
+  tools:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Build tools image
+        run: docker compose build tools
+      - name: Lint, format check, tests, content validation
+        run: make check-tools

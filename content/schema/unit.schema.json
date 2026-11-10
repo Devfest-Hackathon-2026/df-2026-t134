@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "description": {
+      "minLength": 1,
+      "title": "Description",
+      "type": "string"
+    },
+    "id": {
+      "maxLength": 64,
+      "minLength": 1,
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+      "title": "Id",
+      "type": "string"
+    },
+    "level": {
+      "enum": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "title": "Level",
+      "type": "integer"
+    },
+    "order": {
+      "minimum": 1,
+      "title": "Order",
+      "type": "integer"
+    },
+    "title": {
+      "minLength": 1,
+      "title": "Title",
+      "type": "string"
+    }
+  },
+  "required": [
+    "id",
+    "order",
+    "title",
+    "description",
+    "level"
+  ],
+  "title": "Unit",
+  "type": "object"
+}

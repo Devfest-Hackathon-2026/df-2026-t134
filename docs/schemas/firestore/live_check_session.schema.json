@@ -1,0 +1,163 @@
+{
+  "$defs": {
+    "HallucinationError": {
+      "additionalProperties": false,
+      "properties": {
+        "correction": {
+          "minLength": 1,
+          "title": "Correction",
+          "type": "string"
+        },
+        "errorType": {
+          "enum": [
+            "number",
+            "date",
+            "name",
+            "fake_source",
+            "causality",
+            "fact"
+          ],
+          "title": "Errortype",
+          "type": "string"
+        },
+        "index": {
+          "minimum": 0,
+          "title": "Index",
+          "type": "integer"
+        },
+        "tip": {
+          "minLength": 1,
+          "title": "Tip",
+          "type": "string"
+        }
+      },
+      "required": [
+        "index",
+        "errorType",
+        "correction",
+        "tip"
+      ],
+      "title": "HallucinationError",
+      "type": "object"
+    },
+    "Sentence": {
+      "additionalProperties": false,
+      "properties": {
+        "index": {
+          "minimum": 0,
+          "title": "Index",
+          "type": "integer"
+        },
+        "text": {
+          "minLength": 1,
+          "title": "Text",
+          "type": "string"
+        }
+      },
+      "required": [
+        "index",
+        "text"
+      ],
+      "title": "Sentence",
+      "type": "object"
+    },
+    "WebSource": {
+      "additionalProperties": false,
+      "description": "A web page Google Search returned for the grounded answer.",
+      "properties": {
+        "title": {
+          "title": "Title",
+          "type": "string"
+        },
+        "uri": {
+          "title": "Uri",
+          "type": "string"
+        }
+      },
+      "required": [
+        "title",
+        "uri"
+      ],
+      "title": "WebSource",
+      "type": "object"
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "One generated answer of a live_check exercise, with its secret answer key.\nServer only: clients never read it (the errors would give the answer away).",
+  "properties": {
+    "answered": {
+      "title": "Answered",
+      "type": "boolean"
+    },
+    "createdAt": {
+      "format": "date-time",
+      "title": "Createdat",
+      "type": "string"
+    },
+    "errors": {
+      "items": {
+        "$ref": "#/$defs/HallucinationError"
+      },
+      "maxItems": 2,
+      "minItems": 1,
+      "title": "Errors",
+      "type": "array"
+    },
+    "exerciseId": {
+      "maxLength": 64,
+      "minLength": 1,
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+      "title": "Exerciseid",
+      "type": "string"
+    },
+    "lessonId": {
+      "maxLength": 64,
+      "minLength": 1,
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+      "title": "Lessonid",
+      "type": "string"
+    },
+    "lookupsUsed": {
+      "minimum": 0,
+      "title": "Lookupsused",
+      "type": "integer"
+    },
+    "prompt": {
+      "title": "Prompt",
+      "type": "string"
+    },
+    "sentences": {
+      "items": {
+        "$ref": "#/$defs/Sentence"
+      },
+      "maxItems": 12,
+      "minItems": 2,
+      "title": "Sentences",
+      "type": "array"
+    },
+    "sources": {
+      "additionalProperties": {
+        "items": {
+          "$ref": "#/$defs/WebSource"
+        },
+        "type": "array"
+      },
+      "title": "Sources",
+      "type": "object"
+    }
+  },
+  "required": [
+    "exerciseId",
+    "lessonId",
+    "prompt",
+    "sentences",
+    "errors",
+    "sources",
+    "lookupsUsed",
+    "answered",
+    "createdAt"
+  ],
+  "title": "LiveCheckSession",
+  "type": "object"
+}

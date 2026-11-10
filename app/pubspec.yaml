@@ -1,0 +1,36 @@
+name: ailearn
+description: "AI literacy learning app for junior and senior high school students"
+publish_to: 'none'
+version: 0.1.0+1
+
+environment:
+  sdk: ^3.13.7
+
+dependencies:
+  cloud_firestore: ^7.1.0
+  firebase_app_check: ^0.5.1
+  firebase_auth: ^7.0.1
+  firebase_core: ^5.1.0
+  firebase_storage: ^14.0.1
+  flutter:
+    sdk: flutter
+  flutter_riverpod: ^3.5.0
+  go_router: ^18.1.3
+  http: ^1.6.0
+  url_launcher: ^6.3.3
+  just_audio: ^0.10.6
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/fonts/wdxl/OFL.txt
+  fonts:
+    - family: WDXL Lubrifont JP N
+      fonts:
+        - asset: assets/fonts/wdxl/WDXLLubrifontJPN-Regular.ttf
+          weight: 400

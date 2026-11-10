@@ -1,0 +1,122 @@
+lesson:
+  id: u1-l4
+  unitId: u1
+  order: 4
+  title: 紙しばいで考えよう　ユイと AI
+  exerciseIds: [u1-l4-q1, u1-l4-q2, u1-l4-q3]
+  intro:
+    text: |-
+      今日は、中学2年生のユイのお話を、紙しばいで見ていこう。
+      お話のとちゅうで「ユイはどうする？」と聞くから、いちばんいいと思うものをえらんでね！
+
+exercises:
+  - id: u1-l4-q1
+    lessonId: u1-l4
+    type: story
+    title: 自由研究と AI の答え
+    question: ユイはどうする？
+    scenes:
+      - speaker: narrator
+        text: 夏休み。ユイは、自由研究で「ホタルが光るしくみ」を調べることにしました。
+        illustration:
+          prompt: >-
+            Summer evening in Yui's small, tidy bedroom. Yui sits at her wooden desk by an open
+            window, a closed notebook and pencils in front of her, a few fireflies glowing softly
+            in the garden outside. The AI assistant tablet stands on the desk.
+      - speaker: student
+        text: ねえ AI、ホタルはどうして光るの？
+        illustration:
+          prompt: >-
+            Close-up of Yui at her desk leaning toward the AI assistant tablet with a curious
+            smile, chin resting on one hand, asking it a question. Warm lamp light, evening.
+      - speaker: ai
+        text: ホタルは、おしりの中で電気をつくって、豆電球のように光っています！
+        illustration:
+          prompt: >-
+            The AI assistant tablet on the desk, its round glowing face smiling confidently,
+            with a soft floating picture of a small light bulb beside it. Yui's hands are
+            visible at the edge of the desk.
+      - speaker: student
+        text: わあ、すごく分かりやすい！　このままレポートに書いちゃおうかな。
+        illustration:
+          prompt: >-
+            Yui at her desk holding a pencil over an open notebook, smiling and about to write,
+            the AI assistant tablet glowing beside her. Fireflies outside the window.
+    options:
+      - id: copy
+        text: AI の答えを、そのままレポートに書く
+      - id: check
+        text: 図鑑や信頼できるサイトで、本当にそうか確かめてから書く
+      - id: ask-again
+        text: AI に「本当？」と聞き直して、「はい」と言われたら書く
+
+  - id: u1-l4-q2
+    lessonId: u1-l4
+    type: story
+    title: ソウタのアイデア
+    question: ユイはどうする？
+    scenes:
+      - speaker: narrator
+        text: 放課後の教室。ソウタが、タブレットを見ながら楽しそうにしています。
+        illustration:
+          prompt: >-
+            A quiet junior high school classroom after school, warm late-afternoon sunlight
+            through the windows. Sota sits at a desk grinning at a tablet; Yui walks over with
+            her school bag.
+      - speaker: friend
+        text: 見て！　クラスのみんなの写真を AI に入れて、おもしろい合成画像をつくろうと思うんだ。
+        illustration:
+          prompt: >-
+            Sota excitedly holding up a tablet toward Yui in the classroom; the screen shows
+            only soft blurred shapes of a group photo. Yui looks at it, surprised.
+      - speaker: friend
+        text: 名前と住所も入れたら、もっとリアルなプロフィールができるかも！
+      - speaker: student
+        text: え……それって、大丈夫なのかな。
+        illustration:
+          prompt: >-
+            Yui standing beside Sota's desk in the sunny classroom, holding the strap of her
+            school bag, looking worried and thoughtful, while Sota keeps looking at his tablet.
+    options:
+      - id: join
+        text: おもしろそうだから、いっしょにつくる
+      - id: stop
+        text: 本人の許可なく写真や個人情報を入れないほうがいいと伝え、先生にも相談する
+      - id: ignore
+        text: 自分の写真じゃないから関係ないと思って、だまって帰る
+
+  - id: u1-l4-q3
+    lessonId: u1-l4
+    type: story
+    title: 作文の宿題
+    question: ユイはどうする？
+    scenes:
+      - speaker: narrator
+        text: 国語の宿題は「わたしの好きな季節」という作文。ユイは、何を書くか決められずにいます。
+        illustration:
+          prompt: >-
+            Yui at the dining table at home in the evening with a blank sheet of writing paper
+            and a pencil, resting her cheek on her hand and thinking hard. The AI assistant
+            tablet lies on the table.
+      - speaker: student
+        text: そうだ、AI にアイデアを出してもらおうかな。
+      - speaker: ai
+        text: たとえば「夏祭りの思い出」「冬の朝の空気」「春の通学路」はどうでしょう？　作文をまるごと書くこともできますよ。
+        illustration:
+          prompt: >-
+            The AI assistant tablet on the table, its glowing face smiling, with three soft
+            floating picture bubbles above it: summer festival lanterns, a frosty winter
+            morning, and cherry blossoms along a path to school.
+      - speaker: student
+        text: まるごと書いてくれるの？　どうしよう……。
+        illustration:
+          prompt: >-
+            Yui sitting at the dining table looking at the AI assistant tablet with a
+            hesitant, unsure expression, her pencil paused above the blank writing paper.
+    options:
+      - id: ai-writes
+        text: AI に作文をまるごと書いてもらって、そのまま出す
+      - id: own-words
+        text: アイデアを参考にして、自分の思い出を自分のことばで書く
+      - id: copy-friend
+        text: AI は使わずに、友だちの作文を写させてもらう

@@ -1,0 +1,821 @@
+{
+  "$defs": {
+    "AgentBlock": {
+      "additionalProperties": false,
+      "description": "A block the learner can put into the agent: a (mock) tool or a rule.",
+      "properties": {
+        "description": {
+          "minLength": 1,
+          "title": "Description",
+          "type": "string"
+        },
+        "id": {
+          "maxLength": 64,
+          "minLength": 1,
+          "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+          "title": "Id",
+          "type": "string"
+        },
+        "name": {
+          "minLength": 1,
+          "title": "Name",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "description"
+      ],
+      "title": "AgentBlock",
+      "type": "object"
+    },
+    "AgentExercise": {
+      "additionalProperties": false,
+      "description": "Build an AI agent from blocks (F-12). The goal is given; the learner picks the tools and\nrules the agent gets. The server runs the agent (ADK, mock tools only) and shows each step:\nthink -> use a tool -> look at the result, until it answers, asks a person or gives up.",
+      "properties": {
+        "goal": {
+          "minLength": 1,
+          "title": "Goal",
+          "type": "string"
+        },
+        "id": {
+          "maxLength": 64,
+          "minLength": 1,
+          "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+          "title": "Id",
+          "type": "string"
+        },
+        "intro": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Speech"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "lessonId": {
+          "maxLength": 64,
+          "minLength": 1,
+          "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+          "title": "Lessonid",
+          "type": "string"
+        },
+        "maxTools": {
+          "maximum": 6,
+          "minimum": 1,
+          "title": "Maxtools",
+          "type": "integer"
+        },
+        "question": {
+          "minLength": 1,
+          "title": "Question",
+          "type": "string"
+        },
+        "rules": {
+          "items": {
+            "$ref": "#/$defs/AgentBlock"
+          },
+          "maxItems": 4,
+          "minItems": 1,
+          "title": "Rules",
+          "type": "array"
+        },
+        "situation": {
+          "minLength": 1,
+          "title": "Situation",
+          "type": "string"
+        },
+        "tools": {
+          "items": {
+            "$ref": "#/$defs/AgentBlock"
+          },
+          "maxItems": 6,
+          "minItems": 2,
+          "title": "Tools",
+          "type": "array"
+        },
+        "type": {
+          "const": "agent",
+          "title": "Type",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "lessonId",
+        "question",
+        "type",
+        "goal",
+        "situation",
+        "tools",
+        "rules",
+        "maxTools"
+      ],
+      "title": "AgentExercise",
+      "type": "object"
+    },
+    "Blank": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "maxLength": 64,
+          "minLength": 1,
+          "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+          "title": "Id",
+          "type": "string"
+        },
+        "options": {
+          "items": {
+            "$ref": "#/$defs/Option"
+          },
+          "maxItems": 6,
+          "minItems": 2,
+          "title": "Options",
+          "type": "array"
+        }
+      },
+      "required": [
+        "id",
+        "options"
+      ],
+      "title": "Blank",
+      "type": "object"
+    },
+    "ChoiceExercise": {
+      "additionalProperties": false,
+      "description": "Q1: pick one option (true/false is a two-option choice).",
+      "properties": {
+        "id": {
+          "maxLength": 64,
+          "minLength": 1,
+          "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+          "title": "Id",
+          "type": "string"
+        },
+        "intro": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Speech"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "lessonId": {
+          "maxLength": 64,
+          "minLength": 1,
+          "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+          "title": "Lessonid",
+          "type": "string"
+        },
+        "options": {
+          "items": {
+            "$ref": "#/$defs/Option"
+          },
+          "maxItems": 6,
+          "minItems": 2,
+          "title": "Options",
+          "type": "array"
+        },
+        "question": {
+          "minLength": 1,
+          "title": "Question",
+          "type": "string"
+        },
+        "type": {
+          "const": "choice",
+          "title": "Type",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "lessonId",
+        "question",
+        "type",
+        "options"
+      ],
+      "title": "ChoiceExercise",
+      "type": "object"
+    },
+    "FillBlankExercise": {
+      "additionalProperties": false,
+      "description": "Q3: choose an option for every blank. The template marks blanks as {{blank_id}}.",
+      "properties": {
+        "blanks": {
+          "items": {
+            "$ref": "#/$defs/Blank"
+          },
+          "maxItems": 4,
+          "minItems": 1,
+          "title": "Blanks",
+          "type": "array"
+        },
+        "id": {
+          "maxLength": 64,
+          "minLength": 1,
+          "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+          "title": "Id",
+          "type": "string"
+        },
+        "intro": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Speech"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "lessonId": {
+          "maxLength": 64,
+          "minLength": 1,
+          "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+          "title": "Lessonid",
+          "type": "string"
+        },
+        "question": {
+          "minLength": 1,
+          "title": "Question",
+          "type": "string"
+        },
+        "template": {
+          "minLength": 1,
+          "title": "Template",
+          "type": "string"
+        },
+        "type": {
+          "const": "fill_blank",
+          "title": "Type",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "lessonId",
+        "question",
+        "type",
+        "template",
+        "blanks"
+      ],
+      "title": "FillBlankExercise",
+      "type": "object"
+    },
+    "HallucinationExercise": {
+      "additionalProperties": false,
+      "description": "Q2: an AI answer split into sentences; the learner taps the wrong ones.",
+      "properties": {
+        "errorCount": {
+          "maximum": 3,
+          "minimum": 1,
+          "title": "Errorcount",
+          "type": "integer"
+        },
+        "id": {
+          "maxLength": 64,
+          "minLength": 1,
+          "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+          "title": "Id",
+          "type": "string"
+        },
+        "intro": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Speech"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "lessonId": {
+          "maxLength": 64,
+          "minLength": 1,
+          "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+          "title": "Lessonid",
+          "type": "string"
+        },
+        "question": {
+          "minLength": 1,
+          "title": "Question",
+          "type": "string"
+        },
+        "sentences": {
+          "items": {
+            "$ref": "#/$defs/Sentence"
+          },
+          "maxItems": 12,
+          "minItems": 2,
+          "title": "Sentences",
+          "type": "array"
+        },
+        "topic": {
+          "minLength": 1,
+          "title": "Topic",
+          "type": "string"
+        },
+        "type": {
+          "const": "hallucination",
+          "title": "Type",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "lessonId",
+        "question",
+        "type",
+        "topic",
+        "sentences",
+        "errorCount"
+      ],
+      "title": "HallucinationExercise",
+      "type": "object"
+    },
+    "Illustration": {
+      "additionalProperties": false,
+      "description": "A picture for a story scene. `prompt` describes it for the image model (authoring);\n`image_path` (Cloud Storage) is filled in by the content tools, never written by hand.",
+      "properties": {
+        "imagePath": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Imagepath"
+        },
+        "prompt": {
+          "minLength": 1,
+          "title": "Prompt",
+          "type": "string"
+        }
+      },
+      "required": [
+        "prompt"
+      ],
+      "title": "Illustration",
+      "type": "object"
+    },
+    "LiveCheckExercise": {
+      "additionalProperties": false,
+      "description": "The learner asks Gemini about `theme` with their own prompt. The server answers with\nsources from Google Search, secretly rewrites `error_count` sentences to be wrong, and the\nlearner finds them, looking up sources at most `lookup_limit` times.",
+      "properties": {
+        "errorCount": {
+          "maximum": 2,
+          "minimum": 1,
+          "title": "Errorcount",
+          "type": "integer"
+        },
+        "id": {
+          "maxLength": 64,
+          "minLength": 1,
+          "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+          "title": "Id",
+          "type": "string"
+        },
+        "intro": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Speech"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "lessonId": {
+          "maxLength": 64,
+          "minLength": 1,
+          "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+          "title": "Lessonid",
+          "type": "string"
+        },
+        "lookupLimit": {
+          "default": 2,
+          "maximum": 5,
+          "minimum": 0,
+          "title": "Lookuplimit",
+          "type": "integer"
+        },
+        "maxLength": {
+          "default": 200,
+          "maximum": 400,
+          "minimum": 20,
+          "title": "Maxlength",
+          "type": "integer"
+        },
+        "question": {
+          "minLength": 1,
+          "title": "Question",
+          "type": "string"
+        },
+        "suggestions": {
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "maxItems": 4,
+          "minItems": 1,
+          "title": "Suggestions",
+          "type": "array"
+        },
+        "theme": {
+          "minLength": 1,
+          "title": "Theme",
+          "type": "string"
+        },
+        "type": {
+          "const": "live_check",
+          "title": "Type",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "lessonId",
+        "question",
+        "type",
+        "theme",
+        "suggestions",
+        "errorCount"
+      ],
+      "title": "LiveCheckExercise",
+      "type": "object"
+    },
+    "Option": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "maxLength": 64,
+          "minLength": 1,
+          "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+          "title": "Id",
+          "type": "string"
+        },
+        "text": {
+          "minLength": 1,
+          "title": "Text",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "text"
+      ],
+      "title": "Option",
+      "type": "object"
+    },
+    "OrderExercise": {
+      "additionalProperties": false,
+      "description": "Q3: put the items in the right order. The app shuffles them before display.",
+      "properties": {
+        "id": {
+          "maxLength": 64,
+          "minLength": 1,
+          "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+          "title": "Id",
+          "type": "string"
+        },
+        "intro": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Speech"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "items": {
+          "items": {
+            "$ref": "#/$defs/Option"
+          },
+          "maxItems": 8,
+          "minItems": 2,
+          "title": "Items",
+          "type": "array"
+        },
+        "lessonId": {
+          "maxLength": 64,
+          "minLength": 1,
+          "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+          "title": "Lessonid",
+          "type": "string"
+        },
+        "question": {
+          "minLength": 1,
+          "title": "Question",
+          "type": "string"
+        },
+        "type": {
+          "const": "order",
+          "title": "Type",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "lessonId",
+        "question",
+        "type",
+        "items"
+      ],
+      "title": "OrderExercise",
+      "type": "object"
+    },
+    "PromptExercise": {
+      "additionalProperties": false,
+      "description": "Q4: write a prompt for the task; graded by Gemini with the shared rubric.",
+      "properties": {
+        "id": {
+          "maxLength": 64,
+          "minLength": 1,
+          "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+          "title": "Id",
+          "type": "string"
+        },
+        "intro": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Speech"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "lessonId": {
+          "maxLength": 64,
+          "minLength": 1,
+          "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+          "title": "Lessonid",
+          "type": "string"
+        },
+        "maxLength": {
+          "default": 400,
+          "maximum": 1000,
+          "minimum": 20,
+          "title": "Maxlength",
+          "type": "integer"
+        },
+        "question": {
+          "minLength": 1,
+          "title": "Question",
+          "type": "string"
+        },
+        "task": {
+          "minLength": 1,
+          "title": "Task",
+          "type": "string"
+        },
+        "type": {
+          "const": "prompt",
+          "title": "Type",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "lessonId",
+        "question",
+        "type",
+        "task"
+      ],
+      "title": "PromptExercise",
+      "type": "object"
+    },
+    "Scene": {
+      "additionalProperties": false,
+      "description": "One panel of a story: who speaks, what they say, and optionally a picture.\n`audio_path` is filled in by the content tools (each speaker has its own voice).",
+      "properties": {
+        "audioPath": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Audiopath"
+        },
+        "illustration": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Illustration"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "speaker": {
+          "enum": [
+            "narrator",
+            "mascot",
+            "student",
+            "friend",
+            "teacher",
+            "ai"
+          ],
+          "title": "Speaker",
+          "type": "string"
+        },
+        "text": {
+          "minLength": 1,
+          "title": "Text",
+          "type": "string"
+        }
+      },
+      "required": [
+        "speaker",
+        "text"
+      ],
+      "title": "Scene",
+      "type": "object"
+    },
+    "Sentence": {
+      "additionalProperties": false,
+      "properties": {
+        "index": {
+          "minimum": 0,
+          "title": "Index",
+          "type": "integer"
+        },
+        "text": {
+          "minLength": 1,
+          "title": "Text",
+          "type": "string"
+        }
+      },
+      "required": [
+        "index",
+        "text"
+      ],
+      "title": "Sentence",
+      "type": "object"
+    },
+    "Speech": {
+      "additionalProperties": false,
+      "description": "A line spoken by the mascot. audio_path is filled in when audio is pre-generated.",
+      "properties": {
+        "audioPath": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Audiopath"
+        },
+        "text": {
+          "minLength": 1,
+          "title": "Text",
+          "type": "string"
+        }
+      },
+      "required": [
+        "text"
+      ],
+      "title": "Speech",
+      "type": "object"
+    },
+    "StoryExercise": {
+      "additionalProperties": false,
+      "description": "A short picture-story (kamishibai). The scenes play first, then `question` asks what\nthe student should do, and the learner picks one of `options`. What happens next depends\non the choice and is in the answer key.",
+      "properties": {
+        "id": {
+          "maxLength": 64,
+          "minLength": 1,
+          "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+          "title": "Id",
+          "type": "string"
+        },
+        "intro": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Speech"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "lessonId": {
+          "maxLength": 64,
+          "minLength": 1,
+          "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+          "title": "Lessonid",
+          "type": "string"
+        },
+        "options": {
+          "items": {
+            "$ref": "#/$defs/Option"
+          },
+          "maxItems": 4,
+          "minItems": 2,
+          "title": "Options",
+          "type": "array"
+        },
+        "question": {
+          "minLength": 1,
+          "title": "Question",
+          "type": "string"
+        },
+        "scenes": {
+          "items": {
+            "$ref": "#/$defs/Scene"
+          },
+          "maxItems": 8,
+          "minItems": 1,
+          "title": "Scenes",
+          "type": "array"
+        },
+        "title": {
+          "minLength": 1,
+          "title": "Title",
+          "type": "string"
+        },
+        "type": {
+          "const": "story",
+          "title": "Type",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "lessonId",
+        "question",
+        "type",
+        "title",
+        "scenes",
+        "options"
+      ],
+      "title": "StoryExercise",
+      "type": "object"
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "discriminator": {
+    "mapping": {
+      "agent": "#/$defs/AgentExercise",
+      "choice": "#/$defs/ChoiceExercise",
+      "fill_blank": "#/$defs/FillBlankExercise",
+      "hallucination": "#/$defs/HallucinationExercise",
+      "live_check": "#/$defs/LiveCheckExercise",
+      "order": "#/$defs/OrderExercise",
+      "prompt": "#/$defs/PromptExercise",
+      "story": "#/$defs/StoryExercise"
+    },
+    "propertyName": "type"
+  },
+  "oneOf": [
+    {
+      "$ref": "#/$defs/ChoiceExercise"
+    },
+    {
+      "$ref": "#/$defs/OrderExercise"
+    },
+    {
+      "$ref": "#/$defs/FillBlankExercise"
+    },
+    {
+      "$ref": "#/$defs/HallucinationExercise"
+    },
+    {
+      "$ref": "#/$defs/PromptExercise"
+    },
+    {
+      "$ref": "#/$defs/StoryExercise"
+    },
+    {
+      "$ref": "#/$defs/LiveCheckExercise"
+    },
+    {
+      "$ref": "#/$defs/AgentExercise"
+    }
+  ],
+  "title": "exercise"
+}
