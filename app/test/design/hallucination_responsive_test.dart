@@ -1,3 +1,5 @@
+import '../support/answer_selection.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -18,8 +20,8 @@ void main() {
       await flow.openLesson(tester, 'u1-l1');
 
       // A false alarm and a miss, so every kind of feedback is laid out.
-      await flow.tapKey(tester, 'hallucination-sentence-4');
-      await flow.tapKey(tester, 'hallucination-sentence-0');
+      await toggleAnswerSentence(tester, 'hallucination', 4);
+      await toggleAnswerSentence(tester, 'hallucination', 0);
       await flow.checkAndExpect(tester, 'feedback-incorrect');
       for (final key in [
         'hallucination-feedback-error-1',

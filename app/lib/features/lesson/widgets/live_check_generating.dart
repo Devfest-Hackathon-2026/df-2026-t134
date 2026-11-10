@@ -81,7 +81,7 @@ class _LiveCheckGeneratingState extends ConsumerState<LiveCheckGenerating>
             const SizedBox(height: 6),
             Text(
               'Google 検索で調べてから答えるので、10〜20 秒くらいかかるよ。'
-              'その間に、どこにまちがいがまぎれこみそうか考えてみよう',
+              '回答が届いたら、出典と見くらべて確かめよう',
               textAlign: TextAlign.center,
               style: TextStyle(color: scheme.onSurfaceVariant, height: 1.5),
             ),

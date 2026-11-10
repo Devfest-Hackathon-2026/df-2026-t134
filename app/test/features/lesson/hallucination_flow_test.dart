@@ -1,3 +1,5 @@
+import '../../support/answer_selection.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -45,21 +47,21 @@ void main() {
     await tapKey(tester, 'lesson-next');
 
     // The hallucination exercise: nothing tapped yet, so no check.
-    expect(find.text('AI の答え：富士山'), findsOneWidget);
-    expect(find.text('まちがいは 2 こ'), findsOneWidget);
+    expect(find.text('富士山'), findsOneWidget);
+    expect(find.byKey(const Key('hallucination-error-count')), findsNothing);
     expect(checkEnabled(tester), isFalse);
-    expect(find.text('まちがっていると思う文をタップしてからチェックしよう'), findsOneWidget);
-    await tapKey(tester, 'hallucination-sentence-2');
+    expect(find.text('誤りと思う部分を指定するか、「誤りはない」を選ぼう'), findsOneWidget);
+    await toggleAnswerSentence(tester, 'hallucination', 2);
     expect(checkEnabled(tester), isTrue);
-    await tapKey(tester, 'hallucination-sentence-2');
+    await toggleAnswerSentence(tester, 'hallucination', 2);
     expect(checkEnabled(tester), isFalse, reason: 'tapping again unmarks');
-    await tapKey(tester, 'hallucination-sentence-0');
-    await tapKey(tester, 'hallucination-sentence-4');
-    expect(find.text('えらんだ文：2 こ'), findsOneWidget);
+    await toggleAnswerSentence(tester, 'hallucination', 0);
+    await toggleAnswerSentence(tester, 'hallucination', 4);
+    expect(find.byType(InputChip), findsNWidgets(2));
 
     await checkAndExpect(tester, 'feedback-incorrect');
     expect(find.text('おしい！'), findsOneWidget);
-    expect(find.text('まちがい 2 こ中 1 こ見つけたよ'), findsOneWidget);
+    expect(find.text('誤り 2 か所のうち 1 か所を確認できたよ'), findsOneWidget);
     expect(
       find.byKey(const Key('hallucination-feedback-false-alarm-0')),
       findsOneWidget,
@@ -81,11 +83,11 @@ void main() {
 
     // The review: a fresh draft, answered right this time.
     expect(find.byKey(const Key('review-badge')), findsOneWidget);
-    expect(find.text('えらんだ文：0 こ'), findsOneWidget);
-    await tapKey(tester, 'hallucination-sentence-1');
-    await tapKey(tester, 'hallucination-sentence-4');
+    expect(find.byType(InputChip), findsNothing);
+    await toggleAnswerSentence(tester, 'hallucination', 1);
+    await toggleAnswerSentence(tester, 'hallucination', 4);
     await checkAndExpect(tester, 'feedback-correct');
-    expect(find.text('まちがい 2 こ中 2 こ見つけたよ'), findsOneWidget);
+    expect(find.text('誤り 2 か所のうち 2 か所を確認できたよ'), findsOneWidget);
     await tapKey(tester, 'lesson-next');
 
     expect(find.text('レッスンクリア！'), findsOneWidget);

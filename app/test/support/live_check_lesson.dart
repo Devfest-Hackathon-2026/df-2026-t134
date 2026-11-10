@@ -17,9 +17,9 @@ abstract final class LiveCheckLessonFixture {
     'id': lessonId,
     'unitId': 'u3',
     'order': 1,
-    'title': 'AI の答えを探偵しよう',
+    'title': 'AI の答えを確かめよう',
     'exerciseIds': [choiceId, liveId],
-    'intro': {'text': '今日は探偵になって、本物の AI の答えを調べるよ。'},
+    'intro': {'text': '質問への AI の回答が正しいか、出典と見くらべて確かめよう。'},
   });
 
   static final choice = Exercise.fromJson({
@@ -38,7 +38,7 @@ abstract final class LiveCheckLessonFixture {
     'id': liveId,
     'lessonId': lessonId,
     'type': 'live_check',
-    'question': 'AI に富士山のことを質問しよう。まちがった文が 1 つまぎれこんでいるよ。',
+    'question': 'AI に富士山のことを質問し、回答が正しいか確かめよう。',
     'intro': {'text': '例をタップしてもいいし、自分で質問を考えてもいいよ。'},
     'theme': '富士山',
     'suggestions': ['富士山の高さと、どこにあるかを教えて', '富士山が世界遺産になったのはいつ？'],

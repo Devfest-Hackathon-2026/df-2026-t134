@@ -58,7 +58,10 @@ __all__ = [
 
 WRITE_TEMPERATURE = 0.3
 
-QUESTION = "AI の答えの中に、まちがっている文があります。まちがっている文をすべてタップしよう。"
+QUESTION = (
+    "質問に対して、AI の回答は正しいでしょうか。誤りがあると思う部分を選び、"
+    "ないと思うときは「誤りはない」と答えよう。"
+)
 
 WRITE_INSTRUCTION = f"""\
 あなたは、中学生・高校生向けの教材を作る編集者です。Google 検索で確かめた事実だけを使い、
@@ -123,12 +126,12 @@ def draft_exercise(
     """Write, inject and check one exercise. Raises DraftRejected, AiUnavailable, AiBlocked."""
     if not exercise_id.startswith(f"{_id.validate_python(lesson_id)}-"):
         raise ValueError("exercise_id must start with the lesson id")
-    if not 1 <= len(error_types) <= 3:
-        raise ValueError("an exercise has 1 to 3 errors")
+    if not 0 <= len(error_types) <= 3:
+        raise ValueError("an exercise has 0 to 3 errors")
     explanation, sources = write_explanation(writer, topic)
     correct = explanation.sentences
-    injection = inject_errors(generator, topic, correct, error_types)
-    wrong = {error.index: error.wrong_text for error in injection.errors}
+    injected = inject_errors(generator, topic, correct, error_types).errors if error_types else []
+    wrong = {error.index: error.wrong_text for error in injected}
     exercise = HallucinationExercise(
         id=exercise_id,
         lesson_id=lesson_id,
@@ -139,7 +142,7 @@ def draft_exercise(
             Sentence(index=index, text=wrong.get(index, sentence))
             for index, sentence in enumerate(correct)
         ],
-        error_count=len(injection.errors),
+        error_count=len(injected),
     )
     answer_key = HallucinationAnswerKey(
         type="hallucination",
@@ -150,7 +153,7 @@ def draft_exercise(
                 correction=correct[error.index],
                 tip=error.tip,
             )
-            for error in sorted(injection.errors, key=lambda error: error.index)
+            for error in sorted(injected, key=lambda error: error.index)
         ],
     )
     # The same cross-check as `make content-validate`, so a draft can be published as is.

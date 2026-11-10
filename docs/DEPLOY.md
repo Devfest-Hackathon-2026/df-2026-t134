@@ -75,3 +75,30 @@ make seed-production CONFIRM_PROJECT=tokyo03-514216
 
 - `https://tokyo03-514216.web.app` を開き、ゲストでログイン → ニックネーム登録 → レッスンを最後まで遊ぶ。
 - API のログ: Cloud コンソールの Cloud Run →「ailearn-api」→「ログ」（JSON 形式で、`severity`・リクエストのパス・ステータスが出る）。
+
+## GitHub Actionsから再デプロイ
+
+`.github/workflows/deploy.yml` をmainへマージすると、Actions → **Deploy production** → **Run workflow** から再デプロイできる。ブランチはmain、targetは `all`（APIとWeb）、`web`（画面だけ）、`api`（APIだけ）を選ぶ。mainの同じコミットでCIの6ジョブ（デプロイ設定検証を含む）がすべて成功していることが条件。CIが実行中なら最大20分待機する。成功した場合だけ続行し、CI失敗・キャンセル・タイムアウトならクラウド認証前に停止する。複数のデプロイは直列実行する。
+
+認証はWorkload Identity Federation。秘密鍵JSONやFirebase CLIの長期トークンは登録しない。`production` 環境の以下のVariablesは設定済み（2026-11-10）。値は秘密情報ではない。
+
+- `GCP_WORKLOAD_IDENTITY_PROVIDER`: `projects/396432345000/locations/global/workloadIdentityPools/github-deploy/providers/tokyo03-main`
+- `GCP_DEPLOY_SERVICE_ACCOUNT`: `github-deploy@tokyo03-514216.iam.gserviceaccount.com`
+
+Google Cloud側は `deploy/setup-github-oidc.sh` で設定・再現できる。管理者がgcloudで実行する一度限りの準備であり、ワークフローからIAM権限を変更しない。信頼条件はリポジトリID・所有者ID・main・対象ワークフローファイル・workflow_dispatchのすべて。forkやPRからのデプロイは許可しない。
+
+デプロイ用SAはCloud Run Developer、Firebase Hosting Admin、Firebase Viewer、Service Usage Consumerをプロジェクトに持つ。Artifact Registry Writerは `ailearn` リポジトリ、Service Account Userは実行用 `ailearn-api` SAだけに付与する。ActionsではCloud Runの既存公開IAMを保持し、Firestore/Storageルール・教材・IAMは変更しない。
+
+既存Makeターゲットをビルド・準備・公開に分割し、重いビルドの後でOIDC認証する。Web公開前には認証を更新する。`deploy/ci-make.sh` がADCのファイルをFirebase CLIコンテナへ渡す。認証ファイルはGit管理から除外し、アクション終了時に削除される。ActionsのSummaryにコミットとURLを記録する。
+
+### 取り消し
+
+APIはCloud Runの直前の正常リビジョンへトラフィックを戻す（例: `gcloud run services update-traffic ailearn-api --project tokyo03-514216 --region asia-northeast1 --to-revisions=<previous-ready-revision>=100`）。WebはFirebaseコンソールのHostingリリース履歴から直前の版へ戻す。データの書き換えはこのフローに含めないので、データ復元は不要。手動実行による旧コミットの直接指定は許可せず、GitのrevertをmainへマージしてCI通過後に再配備する方法も使える。
+
+### 2026-11-10の再デプロイ記録
+
+- 対象コミット: `eadfa8f87ff391c6c31e3d10c4395ba0a7789e44`（main、CI全5ジョブ成功）
+- API: `ailearn-api-00003-8m8`（直前は `ailearn-api-00002-thw`）
+- Hosting: `https://tokyo03-514216.web.app`
+- APIの `/v1/health` は `status=ok` / `env=prod`。Hostingの `main.dart.js` はローカル本番ビルドとSHA-256が一致。
+- 教材の再投入と有料AIの呼び出しは実施していない。

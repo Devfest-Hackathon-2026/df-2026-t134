@@ -1,0 +1,4 @@
+gha-creds-*.json
+.git
+.env
+.env.*

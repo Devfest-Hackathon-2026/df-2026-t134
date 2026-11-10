@@ -22,7 +22,11 @@ class HallucinationFeedbackView extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         Text(
-          'まちがい ${review.errorCount} こ中 ${review.foundCount} こ見つけたよ',
+          review.errorCount == 0
+              ? (falseAlarms.isEmpty
+                    ? 'この回答に誤りはありませんでした。正しく確かめられたね。'
+                    : 'この回答に誤りはありませんでした。指定した部分をもう一度見くらべよう。')
+              : '誤り ${review.errorCount} か所のうち ${review.foundCount} か所を確認できたよ',
           key: const Key('hallucination-feedback-summary'),
           style: const TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
         ),

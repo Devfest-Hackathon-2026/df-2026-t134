@@ -179,10 +179,9 @@ def test_model_failures_are_passed_on() -> None:
     [
         ("u3-l2-d1", "u3-l1", ERROR_TYPES),
         ("u3-l1-d1", "U3", ERROR_TYPES),
-        ("u3-l1-d1", "u3-l1", []),
         ("u3-l1-d1", "u3-l1", ["number", "date", "name", "fact"]),
     ],
-    ids=["id of another lesson", "invalid lesson id", "no errors", "four errors"],
+    ids=["id of another lesson", "invalid lesson id", "four errors"],
 )
 def test_invalid_arguments_fail_before_calling_the_model(
     exercise_id: str, lesson_id: str, error_types: list[HallucinationErrorType]
@@ -278,3 +277,12 @@ class _Sequence:
         output = next(self.outputs)
         assert isinstance(output, schema)
         return output
+
+
+def test_clean_draft_has_no_errors_and_never_calls_the_rewriter():
+    generator = FakeGenerator(AiUnavailable("clean drafts must not call the rewriter"))
+    draft = _draft(generator=generator, error_types=[])
+    assert generator.requests == []
+    assert draft.exercise.error_count == 0
+    assert draft.answer_key.errors == []
+    assert [sentence.text for sentence in draft.exercise.sentences] == list(draft.correct_sentences)

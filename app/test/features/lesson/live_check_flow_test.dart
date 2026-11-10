@@ -1,3 +1,5 @@
+import '../../support/answer_selection.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -75,20 +77,23 @@ Future<void> playLiveCheck(WidgetTester tester, FakeLearningApi api) async {
 
   expect(await exerciseText(tester, 'live-check-lookups-left'), contains('2'));
   expect(find.textContaining(F.correction), findsNothing, reason: 'secret');
-  await showInExercise(tester, 'live-check-sentence-0');
-  expect(find.text(F.answer.sentences.first), findsOneWidget);
+  await showInExercise(tester, 'live-check-answer');
+  expect(
+    tester
+        .widget<TextField>(find.byKey(const Key('live-check-answer')))
+        .controller!
+        .text,
+    contains(F.answer.sentences.first),
+  );
 
-  await tapInExercise(tester, 'live-check-lookup-0');
+  await lookupAnswerSentence(tester, 0);
   await showInExercise(tester, 'live-check-sources-0');
   expect(find.text('fuji-net.co.jp'), findsOneWidget);
   expect(find.textContaining(F.correction), findsNothing, reason: 'secret');
   expect(await exerciseText(tester, 'live-check-lookups-left'), contains('1'));
 
-  await tapInExercise(tester, 'live-check-toggle-${F.wrongIndex}');
-  expect(
-    await exerciseText(tester, 'live-check-selected-count'),
-    contains('1'),
-  );
+  await toggleAnswerSentence(tester, 'live-check', F.wrongIndex);
+  expect(find.byType(InputChip), findsOneWidget);
   await tapKey(tester, 'live-check-submit');
 
   expect(find.byKey(const Key('feedback-correct')), findsOneWidget);
@@ -181,7 +186,7 @@ void main() {
     await tapInExercise(tester, 'live-check-suggestion-0');
     await tapKey(tester, 'live-check-send');
 
-    await tapInExercise(tester, 'live-check-toggle-1');
+    await toggleAnswerSentence(tester, 'live-check', 1);
     await tapKey(tester, 'live-check-submit');
 
     expect(find.byKey(const Key('feedback-incorrect')), findsOneWidget);

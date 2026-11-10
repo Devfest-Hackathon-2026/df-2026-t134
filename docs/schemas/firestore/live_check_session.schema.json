@@ -100,7 +100,7 @@
         "$ref": "#/$defs/HallucinationError"
       },
       "maxItems": 2,
-      "minItems": 1,
+      "minItems": 0,
       "title": "Errors",
       "type": "array"
     },

@@ -215,7 +215,9 @@ def run_draft_hallucination(args: argparse.Namespace) -> None:
     model = _required_env("GEMINI_MODEL", "the Gemini model ID that writes the drafts")
     project = _required_env("VERTEX_PROJECT", "the Google Cloud project that runs Vertex AI")
     location = os.environ.get("VERTEX_LOCATION", "").strip() or "global"
-    error_types: list[HallucinationErrorType] = args.error_types or DEFAULT_ERROR_TYPES
+    error_types: list[HallucinationErrorType] = (
+        [] if args.clean else args.error_types or DEFAULT_ERROR_TYPES
+    )
     models = vertex_models(project, location, GENERATION_TIMEOUT_SECONDS)
     writer, generator = GeminiGroundedWriter(models, model), GeminiJsonGenerator(models, model)
 
@@ -276,7 +278,11 @@ def main(argv: list[str] | None = None) -> None:
     draft.add_argument(
         "--topic", dest="topics", action="append", required=True, help="repeat for each topic"
     )
-    draft.add_argument(
+    error_mode = draft.add_mutually_exclusive_group()
+    error_mode.add_argument(
+        "--clean", action="store_true", help="keep the grounded answer without injecting errors"
+    )
+    error_mode.add_argument(
         "--error-type",
         dest="error_types",
         action="append",

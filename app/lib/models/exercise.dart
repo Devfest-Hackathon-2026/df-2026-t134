@@ -333,7 +333,7 @@ class Sentence {
   }
 }
 
-/// Q2: an AI answer split into sentences; the learner taps the wrong ones.
+/// Q2: a complete answer to verify; sentence ids remain internal grading units.
 /// Played with `HallucinationExerciseView` in the lesson player.
 final class HallucinationExercise extends Exercise {
   const HallucinationExercise({
@@ -378,7 +378,7 @@ final class HallucinationExercise extends Exercise {
         throw FormatException('$what.sentences must be indexed 0..n-1', map);
       }
     }
-    final errorCount = readInt(map, 'errorCount', what, min: 1, max: 3);
+    final errorCount = readInt(map, 'errorCount', what, min: 0, max: 3);
     if (errorCount >= sentences.length) {
       throw FormatException('$what.errorCount must be < sentence count', map);
     }
@@ -438,8 +438,8 @@ final class PromptExercise extends Exercise {
 }
 
 /// Q10: the learner asks Gemini about [theme] with their own prompt, then
-/// finds the sentences the server secretly rewrote, looking up the Google
-/// Search sources at most [lookupLimit] times. The answer and the session
+/// verifies the answer, possibly with no errors, using Google Search sources
+/// at most [lookupLimit] times. The answer and the session
 /// come from `/v1/live-checks`; played with
 /// lib/features/lesson/widgets/live_check_exercise_view.dart.
 final class LiveCheckExercise extends Exercise {
@@ -509,7 +509,7 @@ final class LiveCheckExercise extends Exercise {
           else
             throw FormatException('$what.suggestions must hold texts', map),
       ],
-      errorCount: readInt(map, 'errorCount', what, min: 1, max: 2),
+      errorCount: readInt(map, 'errorCount', what, min: 0, max: 2),
       lookupLimit: map['lookupLimit'] == null
           ? defaultLookupLimit
           : readInt(map, 'lookupLimit', what, min: 0, max: 5),
@@ -520,10 +520,12 @@ final class LiveCheckExercise extends Exercise {
   }
 }
 
-/// A short picture-story (kamishibai): [scenes] play first, then [question]
-/// asks what to do and the learner picks one of [options]. What happens next
-/// comes back in the `StoryResult`.
-/// Played with lib/features/lesson/widgets/story_exercise_view.dart.
+void _requireType(Map<String, Object?> map, ExerciseType type, String what) {
+  if (map['type'] != type.wireName) {
+    throw FormatException('$what.type must be "${type.wireName}"', map);
+  }
+}
+
 final class StoryExercise extends Exercise {
   const StoryExercise({
     required super.id,
@@ -560,11 +562,5 @@ final class StoryExercise extends Exercise {
       scenes: readScenes(map, 'scenes', what, minItems: 1, maxItems: 8),
       options: _readOptions(map, 'options', what, maxItems: 4),
     );
-  }
-}
-
-void _requireType(Map<String, Object?> map, ExerciseType type, String what) {
-  if (map['type'] != type.wireName) {
-    throw FormatException('$what.type must be "${type.wireName}"', map);
   }
 }

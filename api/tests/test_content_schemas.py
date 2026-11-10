@@ -95,3 +95,8 @@ def test_hallucination_answer_key_rejects_duplicate_indexes() -> None:
 
     with pytest.raises(ValidationError, match="unique"):
         answer_key.validate_python({"type": "hallucination", "errors": [error, error]})
+
+
+def test_a_clean_answer_is_a_valid_hallucination_exercise_and_key() -> None:
+    assert exercise.validate_python(hallucination(errorCount=0)).error_count == 0
+    assert answer_key.validate_python({"type": "hallucination", "errors": []}).errors == []

@@ -326,3 +326,10 @@ def test_every_problem_is_reported_at_once(make_content: MakeContent) -> None:
     tree[LESSON]["lesson"]["exerciseIds"].append("u9-l1-q9")
 
     assert len(problems_for(make_content, tree)) == 3
+
+
+def test_a_clean_authored_answer_and_empty_key_are_publishable(make_content: MakeContent) -> None:
+    tree = valid_tree()
+    exercise(tree, 3)["errorCount"] = 0
+    tree[ANSWERS]["u9-l1-q4"]["errors"] = []
+    assert problems_for(make_content, tree) == []

@@ -112,6 +112,7 @@ class Harness {
         throw StateError('write ${draft.exercise.id} with editPrompt');
       case LiveCheckDraft():
         throw StateError('play ${draft.exercise.id} with startLiveCheck');
+
       case StoryDraft(:final exercise):
         final best = key['bestOptionId']! as String;
         controller.skipStoryScenes();

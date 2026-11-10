@@ -5,6 +5,10 @@ import 'package:ailearn/features/lesson/widgets/hallucination_exercise_view.dart
 import 'package:ailearn/features/lesson/widgets/hallucination_feedback_view.dart';
 import 'package:ailearn/features/lesson/widgets/hallucination_labels.dart';
 import 'package:ailearn/models/answer.dart';
+import 'package:ailearn/models/answer_mark.dart';
+
+import '../../support/answer_selection.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -28,11 +32,6 @@ HallucinationResult partlyWrong() => HallucinationResult(
 HallucinationReview review(HallucinationResult result) =>
     HallucinationReview.resolve(exercise, result);
 
-Finder inSentence(int index, Finder matching) => find.descendant(
-  of: find.byKey(Key('hallucination-sentence-$index')),
-  matching: matching,
-);
-
 void main() {
   test('every error type has a learner label', () {
     expect(HallucinationErrorType.values.map(hallucinationErrorLabel), [
@@ -46,64 +45,67 @@ void main() {
   });
 
   group('HallucinationExerciseView', () {
-    testWidgets('shows the topic, the error count and the sentences', (
-      tester,
-    ) async {
-      final toggled = <int>[];
-      await pumpView(
-        tester,
-        HallucinationExerciseView(
-          exercise: exercise,
-          selectedIndexes: const {},
-          review: null,
-          onToggle: toggled.add,
-        ),
-      );
-
-      expect(find.text('AI の答え：富士山'), findsOneWidget);
-      expect(find.text('まちがっている文をタップしよう'), findsOneWidget);
-      expect(find.text('まちがいは 2 こ'), findsOneWidget);
-      expect(find.text('えらんだ文：0 こ'), findsOneWidget);
-      for (final sentence in exercise.sentences) {
-        expect(find.text(sentence.text), findsOneWidget);
-      }
-      await tester.tap(find.byKey(const Key('hallucination-sentence-3')));
-      expect(toggled, [3]);
-    });
-
-    testWidgets('selected sentences are marked with an icon and text', (
-      tester,
-    ) async {
-      await pumpView(
-        tester,
-        HallucinationExerciseView(
-          exercise: exercise,
-          selectedIndexes: const {1, 3},
-          review: null,
-          onToggle: (_) {},
-        ),
-      );
-
-      expect(find.text('えらんだ文：2 こ'), findsOneWidget);
-      for (final index in [1, 3]) {
-        expect(inSentence(index, find.text('まちがいとしてえらんだ')), findsOneWidget);
-        expect(
-          inSentence(index, find.byIcon(Icons.flag_rounded)),
-          findsOneWidget,
+    testWidgets(
+      'the whole answer is continuous and selecting a fragment marks its claim',
+      (tester) async {
+        final toggled = <int>[];
+        await pumpView(
+          tester,
+          HallucinationExerciseView(
+            exercise: exercise,
+            selectedIndexes: const {},
+            review: null,
+            onToggle: toggled.add,
+          ),
         );
-      }
-      expect(inSentence(0, find.text('まちがいとしてえらんだ')), findsNothing);
-      expect(
-        inSentence(0, find.byIcon(Icons.outlined_flag_rounded)),
-        findsOneWidget,
-      );
-      expect(
-        tester.getSemantics(find.byKey(const Key('hallucination-sentence-1'))),
-        isSemantics(isButton: true, isSelected: true),
-      );
-    });
-
-    testWidgets('after checking, every sentence shows its verdict', (
+        final field = tester.widget<TextField>(
+          find.byKey(const Key('hallucination-answer')),
+        );
+        expect(field.controller!.text, answerPassage(exercise.sentences));
+        expect(field.readOnly, isTrue);
+        expect(
+          find.byKey(const Key('hallucination-error-count')),
+          findsNothing,
+        );
+        expect(find.byKey(const Key('hallucination-sentence-0')), findsNothing);
+        final bounds = sentenceMark(exercise.sentences, 1);
+        await selectAnswerRange(
+          tester,
+          'hallucination',
+          AnswerMark(bounds.start + 2, bounds.start + 5),
+        );
+        await tapAnswerControl(tester, 'hallucination-mark-selected');
+        expect(toggled, [1]);
+      },
+    );
+    testWidgets(
+      'no error is an explicit answer and selected fragments can be removed',
+      (tester) async {
+        var confirmed = false;
+        final removed = <AnswerMark>[];
+        final mark = sentenceMark(exercise.sentences, 1);
+        await pumpView(
+          tester,
+          HallucinationExerciseView(
+            exercise: exercise,
+            selectedIndexes: const {1},
+            marks: [mark],
+            review: null,
+            onToggle: (_) {},
+            onRemove: removed.add,
+            onNoErrors: () => confirmed = true,
+          ),
+        );
+        expect(find.byType(InputChip), findsOneWidget);
+        await tapAnswerControl(tester, 'hallucination-no-errors');
+        expect(confirmed, isTrue);
+        final remove = find.byTooltip('この指定を取り消す');
+        await tester.ensureVisible(remove);
+        await tester.tap(remove);
+        expect(removed, [mark]);
+      },
+    );
+    testWidgets('checked answers stay continuous and cannot be changed', (
       tester,
     ) async {
       await pumpView(
@@ -115,16 +117,18 @@ void main() {
           onToggle: null,
         ),
       );
-
-      expect(inSentence(0, find.text('正しい文だったよ')), findsOneWidget);
-      expect(inSentence(1, find.text('見のがし')), findsOneWidget);
-      expect(inSentence(1, find.text('まちがいの種類：数字')), findsOneWidget);
-      expect(inSentence(2, find.text('正しい文')), findsOneWidget);
-      expect(inSentence(3, find.text('正しい文')), findsOneWidget);
-      expect(inSentence(4, find.text('見つけた！')), findsOneWidget);
-      expect(inSentence(4, find.text('まちがいの種類：ないはずの出典')), findsOneWidget);
-      expect(find.text('まちがいとしてえらんだ'), findsNothing);
-      await tester.tap(find.byKey(const Key('hallucination-sentence-2')));
+      expect(
+        tester
+            .widget<TextField>(find.byKey(const Key('hallucination-answer')))
+            .controller!
+            .text,
+        answerPassage(exercise.sentences),
+      );
+      expect(
+        find.byKey(const Key('hallucination-mark-selected')),
+        findsNothing,
+      );
+      expect(find.byKey(const Key('hallucination-no-errors')), findsNothing);
     });
   });
 
@@ -137,7 +141,7 @@ void main() {
         HallucinationFeedbackView(review: review(partlyWrong())),
       );
 
-      expect(find.text('まちがい 2 こ中 1 こ見つけたよ'), findsOneWidget);
+      expect(find.text('誤り 2 か所のうち 1 か所を確認できたよ'), findsOneWidget);
       Finder inEntry(String key, Finder matching) => find.descendant(
         of: find.byKey(Key('hallucination-feedback-$key')),
         matching: matching,
@@ -194,7 +198,7 @@ void main() {
         ),
       );
 
-      expect(find.text('まちがい 2 こ中 2 こ見つけたよ'), findsOneWidget);
+      expect(find.text('誤り 2 か所のうち 2 か所を確認できたよ'), findsOneWidget);
       expect(find.text('見つけた！'), findsNWidgets(2));
       expect(find.text('見のがし'), findsNothing);
       expect(find.text('正しい文だったよ'), findsNothing);

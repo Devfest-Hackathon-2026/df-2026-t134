@@ -102,7 +102,7 @@ u1-l4-q1:
 
 ## ライブ検証（live_check、Q10）の書き方
 
-生徒が自分で書いた質問（または例のタップ）に Gemini が Google 検索つきで答え、サーバーがその場で `errorCount` 文をこっそり書きかえる。答えも誤りも生徒ごとに作るので、教材に書くのはテーマ・質問の例・回数と、正解キーの「答えてよい範囲」だけ。
+生徒が自分で書いた質問（または例のタップ）に Gemini が Google 検索つきで答え、サーバーがその場で0〜`errorCount`文をこっそり書きかえる（0件なら正しい回答のまま）。答えも誤りも生徒ごとに作るので、教材に書くのはテーマ・質問の例・回数と、正解キーの「答えてよい範囲」だけ。
 
 ```yaml
   - id: u3-l1-q3
@@ -112,7 +112,7 @@ u1-l4-q1:
     theme: 富士山                # 答えの見出しと、AI に伝えるテーマ
     suggestions:                 # 1〜4 個。タップすると入力欄に入る
       - 富士山の高さと、どこにあるかを教えて
-    errorCount: 1                # 書きかえる文の数（1〜2）
+    errorCount: 1                # 書きかえる文の最大数（0〜2）
     lookupLimit: 2               # 「調べる」の回数（0〜5、省略時 2）
     maxLength: 200               # 質問の最大文字数（20〜400、省略時 200）
 ```
@@ -173,3 +173,8 @@ make illustrate IMAGE_MODEL=gemini-3.1-flash-lite-image VERTEX_PROJECT=tokyo03-5
 1. YAML を編集する
 2. `make content-validate` で検証する（`make check-tools` と CI でも実行される）
 3. `make seed` で Firestore Emulator に投入し、アプリで確認する。投入は何度実行してもよく、content にないドキュメントは削除される
+
+
+回答確認型の教材は「必ず誤りがある」と教えず、質問に対して正しい回答が返ったか確かめる文面にする。`hallucination` は `errorCount: 0` と正解キー `errors: []` で誤りのない問題を作れる。`live_check` は0〜最大件数からサーバーが選び、実際の件数を採点前に明かさない。「誤りはない」は `sentenceIndexes: []` として通常どおり採点する。
+
+固定教材の下書きを誤りなしで作る場合は `python -m content_tools draft-hallucination ... --clean` を使う。`--error-type` との同時指定は不可。元の出典を確認してから公開する手順は通常の下書きと同じ。

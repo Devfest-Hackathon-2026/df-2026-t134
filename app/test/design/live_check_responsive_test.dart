@@ -1,3 +1,5 @@
+import '../support/answer_selection.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -76,10 +78,10 @@ void main() {
     await live.tapInExercise(tester, 'live-check-suggestion-0');
     await flow.tapKey(tester, 'live-check-send');
 
-    await live.tapInExercise(tester, 'live-check-lookup-2');
+    await lookupAnswerSentence(tester, 2);
     await live.showInExercise(tester, 'live-check-sources-2');
 
-    final card = tester.getRect(find.byKey(const Key('live-check-sentence-2')));
+    final card = tester.getRect(find.byKey(const Key('live-check-sources-2')));
     final sources = tester.getRect(
       find.byKey(const Key('live-check-sources-2')),
     );

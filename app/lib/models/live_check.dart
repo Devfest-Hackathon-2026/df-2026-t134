@@ -88,7 +88,7 @@ sealed class StartLiveCheckResponse {
   }
 }
 
-/// The AI answered; [errorCount] of [sentences] were secretly rewritten.
+/// The AI answered; [errorCount] is the maximum, not the actual error count.
 final class LiveCheckStarted extends StartLiveCheckResponse {
   LiveCheckStarted({
     required this.sessionId,
@@ -132,7 +132,7 @@ final class LiveCheckStarted extends StartLiveCheckResponse {
         throw FormatException('$what.sentences must be indexed 0..n-1', map);
       }
     }
-    final errorCount = readInt(map, 'errorCount', what, min: 1, max: 2);
+    final errorCount = readInt(map, 'errorCount', what, min: 0, max: 2);
     if (errorCount >= sentences.length) {
       throw FormatException('$what.errorCount must be < sentence count', map);
     }

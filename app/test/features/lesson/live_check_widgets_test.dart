@@ -1,3 +1,5 @@
+import '../../support/answer_selection.dart';
+
 import 'package:ailearn/design/motion.dart';
 import 'package:ailearn/features/lesson/lesson_state.dart';
 import 'package:ailearn/features/lesson/widgets/live_check_exercise_view.dart';
@@ -110,8 +112,8 @@ void main() {
         },
       ),
     );
-    await tester.tap(find.byKey(const Key('live-check-toggle-2')));
-    await tester.tap(find.byKey(const Key('live-check-lookup-1')));
+    await toggleAnswerSentence(tester, 'live-check', 2);
+    await lookupAnswerSentence(tester, 1);
     await tester.pumpAndSettle();
 
     expect(toggled, [2]);
@@ -137,7 +139,7 @@ void main() {
     await pump(tester, view(draft), opened: opened);
 
     expect(find.byKey(const Key('live-check-sources-1')), findsOneWidget);
-    expect(find.text('2 文目の出典（1 件）'), findsOneWidget);
+    expect(find.text('確かめた出典（1 件）'), findsOneWidget);
     expect(find.byKey(const Key('live-check-lookup-1')), findsNothing);
     await tester.tap(find.byKey(const Key('web-source-0')));
     expect(opened, [Uri.parse('https://example.jp/a')]);
@@ -153,15 +155,13 @@ void main() {
 
     await pump(tester, view(draft));
 
-    expect(find.text('調べる回数を使い切ったよ'), findsNWidgets(3));
+    expect(find.textContaining('調べる回数を使い切ったよ。'), findsOneWidget);
     expect(
       find.byKey(const Key('live-check-lookup-failure-0')),
       findsOneWidget,
     );
-    final button = tester.widget<TextButton>(
-      find.byKey(const Key('live-check-lookup-1')),
-    );
-    expect(button.onPressed, isNull);
+    await lookupAnswerSentence(tester, 1);
+    expect(tester.takeException(), isNull);
   });
 
   testWidgets('a sentence without pages says so', (tester) async {
@@ -174,7 +174,7 @@ void main() {
 
     await pump(tester, view(draft));
 
-    expect(find.text('1 文目の出典（0 件）'), findsOneWidget);
+    expect(find.text('確かめた出典（0 件）'), findsOneWidget);
     expect(find.byKey(const Key('web-sources-empty')), findsOneWidget);
   });
 

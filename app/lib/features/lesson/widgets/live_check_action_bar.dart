@@ -40,7 +40,7 @@ class LiveCheckActionBar extends StatelessWidget {
         ? (draft.isTooLong
               ? '${draft.exercise.maxLength} 文字以内にしたら送れるよ'
               : '質問を書くか、例をタップしてから AI に聞こう')
-        : 'まちがいだと思う文をタップしてから決定しよう';
+        : '誤りと思う部分を指定するか、「誤りはない」を選ぼう';
     return Container(
       padding: const EdgeInsets.fromLTRB(20, 12, 20, 20),
       decoration: BoxDecoration(
