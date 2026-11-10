@@ -1,5 +1,4 @@
-"""Deterministic grading of choice / order / fill_blank / hallucination / story / live_check
-answers (pure functions).
+"""Deterministic grading of answers (pure functions).
 
 ``answer_problem`` checks a submitted answer against the public exercise (the 400 cases);
 ``grade`` compares an answer that passed that check with the answer key.
@@ -75,6 +74,7 @@ def answer_problem(exercise: Exercise, answer: Answer) -> str | None:
                 return "sentenceIndexes contains an index outside the sentences"
         case LiveCheckExercise(), LiveCheckAnswer():
             pass  # the sentences are in the session, checked by grade_live_check's caller
+
         case StoryExercise(), StoryAnswer():
             if answer.option_id not in {option.id for option in exercise.options}:
                 return "optionId is not an option of this exercise"
@@ -103,7 +103,7 @@ def grade_fill_blank(key: FillBlankAnswerKey, answer: FillBlankAnswer) -> Graded
 
 
 def grade_hallucination(key: HallucinationAnswerKey, answer: HallucinationAnswer) -> Graded:
-    """Correct only when every wrong sentence was tapped and no correct sentence was."""
+    """Compare marked claims, including an explicit empty answer for a clean response."""
     errors = sorted(key.errors, key=lambda error: error.index)
     wrong = {error.index for error in errors}
     tapped = set(answer.sentence_indexes)
@@ -115,6 +115,12 @@ def grade_hallucination(key: HallucinationAnswerKey, answer: HallucinationAnswer
         false_alarms=sorted(tapped - wrong),
     )
     feedback = "\n".join(line for error in errors for line in (error.correction, error.tip))
+    if not errors:
+        feedback = (
+            "この回答には誤りがありません。出典と照らし合わせて確かめられたね。"
+            if not result.false_alarms
+            else "この回答には誤りがありません。選んだ部分も出典と照らし合わせよう。"
+        )
     return Graded(not result.missed and not result.false_alarms, result, feedback)
 
 

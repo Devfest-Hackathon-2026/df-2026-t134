@@ -138,19 +138,30 @@ deploy-rules: ## Deploy Firestore / Storage security rules and indexes to produc
 	$(FIREBASE_PROD) firebase deploy --non-interactive --project $(PROD_PROJECT) \
 		--only firestore:rules,firestore:indexes,storage
 
-deploy-api: ## Build the API for linux/amd64, push it and deploy it to Cloud Run
+# Split targets let Actions build before requesting short-lived cloud credentials.
+DEPLOY_PUBLIC_ACCESS ?= --allow-unauthenticated
+
+deploy-api: build-api-image publish-api-image deploy-api-image ## Build, push and deploy the API
+
+build-api-image: ## Build a committed API image for linux/amd64
 	@test -z "$$(git status --porcelain -- api)" || (echo "api/ has uncommitted changes" && exit 1)
 	docker buildx build --platform linux/amd64 --target prod -t $(PROD_API_IMAGE):$(DEPLOY_TAG) --load api
+
+publish-api-image: ## Push the already built API image
 	$(GCLOUD) auth print-access-token | docker login -u oauth2accesstoken --password-stdin \
 		https://$(PROD_REGION)-docker.pkg.dev
 	docker push $(PROD_API_IMAGE):$(DEPLOY_TAG)
+
+deploy-api-image: ## Deploy the image, preserving existing IAM when DEPLOY_PUBLIC_ACCESS is empty
 	$(GCLOUD) run deploy $(PROD_API_SERVICE) --project $(PROD_PROJECT) --region $(PROD_REGION) \
 		--image $(PROD_API_IMAGE):$(DEPLOY_TAG) --service-account $(PROD_API_SERVICE_ACCOUNT) \
-		--allow-unauthenticated --min-instances 0 --max-instances $(PROD_API_MAX_INSTANCES) \
+		$(DEPLOY_PUBLIC_ACCESS) --min-instances 0 --max-instances $(PROD_API_MAX_INSTANCES) \
 		--cpu 1 --memory 512Mi --concurrency 40 --timeout 60 --cpu-throttling --quiet \
 		--set-env-vars "^@^APP_ENV=prod@FIREBASE_PROJECT_ID=$(PROD_PROJECT)@CORS_ORIGINS=$(PROD_WEB_ORIGINS)@GEMINI_MODEL=$(PROD_GEMINI_MODEL)@VERTEX_PROJECT=$(PROD_PROJECT)@VERTEX_LOCATION=$(PROD_VERTEX_LOCATION)@TTS_MODEL=$(PROD_TTS_MODEL)@STORAGE_BUCKET=$(PROD_STORAGE_BUCKET)"
 
-deploy-web: ## Build the web app against production and deploy it to Firebase Hosting
+deploy-web: prepare-web build-web-production publish-web ## Build and deploy the production web app
+
+prepare-web: ## Fetch Firebase config and the current API URL
 	@test -z "$$(git status --porcelain -- app)" || (echo "app/ has uncommitted changes" && exit 1)
 	mkdir -p app/build
 	$(FIREBASE_PROD) sh -c "firebase apps:sdkconfig WEB $(PROD_WEB_APP_ID) --project $(PROD_PROJECT) \
@@ -158,12 +169,16 @@ deploy-web: ## Build the web app against production and deploy it to Firebase Ho
 	$(GCLOUD) run services describe $(PROD_API_SERVICE) --project $(PROD_PROJECT) \
 		--region $(PROD_REGION) --format="value(status.url)" > app/build/api-url.txt
 	@test -s app/build/api-url.txt || (echo "the API is not deployed: run make deploy-api" && exit 1)
+
+build-web-production: ## Build using the production settings fetched by prepare-web
 	$(APP) sh -c "flutter pub get && flutter build web --release \
 		--dart-define=API_BASE_URL=$$(cat app/build/api-url.txt) \
 		--dart-define=FIREBASE_BACKEND=production \
 		--dart-define=APP_CHECK_SITE_KEY=$(PROD_APP_CHECK_SITE_KEY) \
 		$$(cat app/build/firebase-defines.txt | tr '\n' ' ')"
 	rm app/build/firebase-defines.txt
+
+publish-web: ## Publish the built production web app
 	$(FIREBASE_PROD) firebase deploy --non-interactive --project $(PROD_PROJECT) --only hosting
 
 seed-production: ## Mirror content/ into production Firestore (needs CONFIRM_PROJECT=<project id>)
@@ -177,3 +192,5 @@ deploy-status: ## Show the production URLs and the deployed API revision
 	@echo "web: https://$(PROD_PROJECT).web.app"
 	@$(GCLOUD) run services describe $(PROD_API_SERVICE) --project $(PROD_PROJECT) \
 		--region $(PROD_REGION) --format="value(status.url,status.latestReadyRevisionName)"
+
+.PHONY: build-api-image publish-api-image deploy-api-image prepare-web build-web-production publish-web

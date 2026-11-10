@@ -154,11 +154,8 @@ class _HowItWorks extends StatelessWidget {
     final scheme = Theme.of(context).colorScheme;
     final steps = [
       (Icons.edit_rounded, '「$theme」について、AI に質問を書く'),
-      (
-        Icons.travel_explore_rounded,
-        'AI が Google 検索で調べて答える（まちがいがこっそり $errorCount こ）',
-      ),
-      (Icons.search_rounded, '「調べる」で出典を見て、まちがいを見つける'),
+      (Icons.travel_explore_rounded, 'AI が Google 検索で調べて答える'),
+      (Icons.search_rounded, '回答を選択して出典を調べ、正しいか確かめる'),
     ];
     return Container(
       key: const Key('live-check-how'),

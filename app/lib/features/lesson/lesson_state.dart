@@ -1,4 +1,5 @@
 import '../../models/answer.dart';
+import '../../models/answer_mark.dart';
 import '../../models/content.dart';
 import '../../models/exercise.dart';
 import '../../models/live_check.dart';
@@ -114,14 +115,32 @@ final class FillBlankDraft extends AnswerDraft {
 }
 
 final class HallucinationDraft extends AnswerDraft {
-  HallucinationDraft(this.exercise, {Set<int> selectedIndexes = const {}})
-    : selectedIndexes = Set.unmodifiable(selectedIndexes);
+  HallucinationDraft(
+    this.exercise, {
+    Set<int> selectedIndexes = const {},
+    List<AnswerMark> marks = const [],
+    this.confirmedNoErrors = false,
+  }) : selectedIndexes = Set.unmodifiable(selectedIndexes),
+       marks = List.unmodifiable(marks);
 
   @override
   final HallucinationExercise exercise;
 
   /// Sentences the learner marked as wrong.
   final Set<int> selectedIndexes;
+
+  final List<AnswerMark> marks;
+  final bool confirmedNoErrors;
+  List<AnswerMark> get selectionMarks => marks.isNotEmpty
+      ? marks
+      : [for (final i in selectedIndexes) sentenceMark(exercise.sentences, i)];
+  HallucinationDraft withMarks(List<AnswerMark> values) => HallucinationDraft(
+    exercise,
+    selectedIndexes: markedIndexes(exercise.sentences, values),
+    marks: values,
+  );
+  HallucinationDraft confirmNoErrors() =>
+      HallucinationDraft(exercise, confirmedNoErrors: true);
 
   /// Marks the sentence at [index] as wrong, or unmarks it.
   HallucinationDraft toggle(int index) {
@@ -136,10 +155,9 @@ final class HallucinationDraft extends AnswerDraft {
     );
   }
 
-  /// Null until at least one sentence is marked. The API accepts an empty
-  /// answer, but every exercise has an error, so it could only be wrong.
+  /// An empty answer is sent only after the learner explicitly confirms it.
   @override
-  Answer? toAnswer() => selectedIndexes.isEmpty
+  Answer? toAnswer() => selectedIndexes.isEmpty && !confirmedNoErrors
       ? null
       : HallucinationAnswer(selectedIndexes.toList()..sort());
 }
@@ -202,11 +220,14 @@ final class LiveCheckDraft extends AnswerDraft {
     this.blocked,
     this.session,
     Set<int> selectedIndexes = const {},
+    List<AnswerMark> marks = const [],
+    this.confirmedNoErrors = false,
     Map<int, List<WebSource>> lookups = const {},
     this.lookupsLeft = 0,
     this.lookingUp,
     this.lookupFailure,
   }) : selectedIndexes = Set.unmodifiable(selectedIndexes),
+       marks = List.unmodifiable(marks),
        lookups = Map.unmodifiable(lookups);
 
   @override
@@ -223,6 +244,25 @@ final class LiveCheckDraft extends AnswerDraft {
 
   /// Sentences the learner marked as wrong.
   final Set<int> selectedIndexes;
+
+  final List<AnswerMark> marks;
+  final bool confirmedNoErrors;
+  List<AnswerMark> get selectionMarks => marks.isNotEmpty
+      ? marks
+      : [for (final i in selectedIndexes) sentenceMark(session!.sentences, i)];
+  LiveCheckDraft withMarks(List<AnswerMark> values) {
+    _requirePhase(composing: false);
+    return _copy(
+      selectedIndexes: markedIndexes(session!.sentences, values),
+      marks: values,
+      confirmedNoErrors: false,
+    );
+  }
+
+  LiveCheckDraft confirmNoErrors() {
+    _requirePhase(composing: false);
+    return _copy(selectedIndexes: {}, marks: [], confirmedNoErrors: true);
+  }
 
   /// Sources of the sentences looked up so far (an empty list: none found).
   final Map<int, List<WebSource>> lookups;
@@ -268,7 +308,7 @@ final class LiveCheckDraft extends AnswerDraft {
 
   LiveCheckDraft started(LiveCheckStarted session) {
     _requirePhase(composing: true);
-    if (session.sentences.length <= exercise.errorCount) {
+    if (session.sentences.length <= session.errorCount) {
       throw FormatException('Live check answer is too short', session);
     }
     return _copy(
@@ -282,6 +322,8 @@ final class LiveCheckDraft extends AnswerDraft {
   LiveCheckDraft toggle(int index) {
     _checkIndex(index);
     return _copy(
+      confirmedNoErrors: false,
+      marks: [],
       selectedIndexes: selectedIndexes.contains(index)
           ? selectedIndexes.difference({index})
           : {...selectedIndexes, index},
@@ -311,14 +353,14 @@ final class LiveCheckDraft extends AnswerDraft {
     lookupFailure: () => (index: index, failure: failure),
   );
 
-  /// Null until the answer arrived and at least one sentence is marked (every
-  /// session has an error, so an empty answer could only be wrong).
+  /// Null until the learner marks content or explicitly chooses no errors.
   @override
   Answer? toAnswer() => switch (session) {
-    final session? when selectedIndexes.isNotEmpty => LiveCheckAnswer(
-      sessionId: session.sessionId,
-      sentenceIndexes: selectedIndexes.toList()..sort(),
-    ),
+    final session? when selectedIndexes.isNotEmpty || confirmedNoErrors =>
+      LiveCheckAnswer(
+        sessionId: session.sessionId,
+        sentenceIndexes: selectedIndexes.toList()..sort(),
+      ),
     _ => null,
   };
 
@@ -360,6 +402,8 @@ final class LiveCheckDraft extends AnswerDraft {
     LiveCheckBlocked? Function()? blocked,
     LiveCheckStarted? session,
     Set<int>? selectedIndexes,
+    List<AnswerMark>? marks,
+    bool? confirmedNoErrors,
     Map<int, List<WebSource>>? lookups,
     int? lookupsLeft,
     int? Function()? lookingUp,
@@ -370,83 +414,12 @@ final class LiveCheckDraft extends AnswerDraft {
     blocked: blocked == null ? this.blocked : blocked(),
     session: session ?? this.session,
     selectedIndexes: selectedIndexes ?? this.selectedIndexes,
+    marks: marks ?? this.marks,
+    confirmedNoErrors: confirmedNoErrors ?? this.confirmedNoErrors,
     lookups: lookups ?? this.lookups,
     lookupsLeft: lookupsLeft ?? this.lookupsLeft,
     lookingUp: lookingUp == null ? this.lookingUp : lookingUp(),
     lookupFailure: lookupFailure == null ? this.lookupFailure : lookupFailure(),
-  );
-}
-
-/// A picture-story: the scenes play one at a time ([sceneIndex]), then the
-/// learner picks an option. After the check, the chosen option's outcome
-/// scenes play ([outcomeIndex]) before the feedback is shown.
-final class StoryDraft extends AnswerDraft {
-  const StoryDraft(
-    this.exercise, {
-    this.sceneIndex = 0,
-    this.selectedOptionId,
-    this.outcomeIndex = 0,
-  });
-
-  @override
-  final StoryExercise exercise;
-
-  /// The scene on screen; `scenes.length` once every scene has been shown
-  /// and the question is asked.
-  final int sceneIndex;
-  final String? selectedOptionId;
-
-  /// The outcome scene on screen after the check; the outcome's length once
-  /// it has played.
-  final int outcomeIndex;
-
-  bool get isDeciding => sceneIndex >= exercise.scenes.length;
-
-  StoryDraft nextScene() {
-    if (isDeciding) {
-      throw StateError('Every scene of ${exercise.id} has been shown');
-    }
-    return _copy(sceneIndex: sceneIndex + 1);
-  }
-
-  /// Jumps to the question (e.g. on a review step).
-  StoryDraft skipScenes() => _copy(sceneIndex: exercise.scenes.length);
-
-  StoryDraft select(String optionId) {
-    if (!isDeciding) {
-      throw StateError('Options of ${exercise.id} are shown after the scenes');
-    }
-    if (!exercise.options.any((o) => o.id == optionId)) {
-      throw ArgumentError.value(optionId, 'optionId', 'not in ${exercise.id}');
-    }
-    return _copy(selectedOptionId: optionId);
-  }
-
-  /// Whether [result]'s outcome has played to the end.
-  bool outcomeDone(StoryResult result) => outcomeIndex >= result.outcome.length;
-
-  StoryDraft nextOutcomeScene(StoryResult result) {
-    if (outcomeDone(result)) {
-      throw StateError('The outcome of ${exercise.id} has been shown');
-    }
-    return _copy(outcomeIndex: outcomeIndex + 1);
-  }
-
-  @override
-  Answer? toAnswer() => switch (selectedOptionId) {
-    final id? when isDeciding => StoryAnswer(id),
-    _ => null,
-  };
-
-  StoryDraft _copy({
-    int? sceneIndex,
-    String? selectedOptionId,
-    int? outcomeIndex,
-  }) => StoryDraft(
-    exercise,
-    sceneIndex: sceneIndex ?? this.sceneIndex,
-    selectedOptionId: selectedOptionId ?? this.selectedOptionId,
-    outcomeIndex: outcomeIndex ?? this.outcomeIndex,
   );
 }
 
@@ -770,4 +743,74 @@ final class LessonFinished extends LessonState {
     LessonCompleted(:final progress) => progress,
     LessonNotCompleted() => tally.lastProgress,
   };
+}
+
+final class StoryDraft extends AnswerDraft {
+  const StoryDraft(
+    this.exercise, {
+    this.sceneIndex = 0,
+    this.selectedOptionId,
+    this.outcomeIndex = 0,
+  });
+
+  @override
+  final StoryExercise exercise;
+
+  /// The scene on screen; `scenes.length` once every scene has been shown
+  /// and the question is asked.
+  final int sceneIndex;
+  final String? selectedOptionId;
+
+  /// The outcome scene on screen after the check; the outcome's length once
+  /// it has played.
+  final int outcomeIndex;
+
+  bool get isDeciding => sceneIndex >= exercise.scenes.length;
+
+  StoryDraft nextScene() {
+    if (isDeciding) {
+      throw StateError('Every scene of ${exercise.id} has been shown');
+    }
+    return _copy(sceneIndex: sceneIndex + 1);
+  }
+
+  /// Jumps to the question (e.g. on a review step).
+  StoryDraft skipScenes() => _copy(sceneIndex: exercise.scenes.length);
+
+  StoryDraft select(String optionId) {
+    if (!isDeciding) {
+      throw StateError('Options of ${exercise.id} are shown after the scenes');
+    }
+    if (!exercise.options.any((o) => o.id == optionId)) {
+      throw ArgumentError.value(optionId, 'optionId', 'not in ${exercise.id}');
+    }
+    return _copy(selectedOptionId: optionId);
+  }
+
+  /// Whether [result]'s outcome has played to the end.
+  bool outcomeDone(StoryResult result) => outcomeIndex >= result.outcome.length;
+
+  StoryDraft nextOutcomeScene(StoryResult result) {
+    if (outcomeDone(result)) {
+      throw StateError('The outcome of ${exercise.id} has been shown');
+    }
+    return _copy(outcomeIndex: outcomeIndex + 1);
+  }
+
+  @override
+  Answer? toAnswer() => switch (selectedOptionId) {
+    final id? when isDeciding => StoryAnswer(id),
+    _ => null,
+  };
+
+  StoryDraft _copy({
+    int? sceneIndex,
+    String? selectedOptionId,
+    int? outcomeIndex,
+  }) => StoryDraft(
+    exercise,
+    sceneIndex: sceneIndex ?? this.sceneIndex,
+    selectedOptionId: selectedOptionId ?? this.selectedOptionId,
+    outcomeIndex: outcomeIndex ?? this.outcomeIndex,
+  );
 }

@@ -121,6 +121,7 @@ class AnswerFeedbackPanel extends StatelessWidget {
     FillBlankResult(:final explanation) => explanation,
     HallucinationResult() => '', // tips are shown per error instead
     LiveCheckResult() => '',
+
     StoryResult(:final explanation) => explanation,
   };
 }

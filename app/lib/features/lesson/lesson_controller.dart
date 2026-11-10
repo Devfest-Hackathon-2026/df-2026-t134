@@ -4,6 +4,7 @@ import '../../core/api_client.dart';
 import '../../core/providers.dart';
 import '../../data/providers.dart';
 import '../../models/answer.dart';
+import '../../models/answer_mark.dart';
 import '../../models/content.dart';
 import '../../models/exercise.dart';
 import '../../models/json_fields.dart';
@@ -77,6 +78,25 @@ class LessonController extends AsyncNotifier<LessonState> {
   void toggleSentence(int index) =>
       _editDraft<HallucinationDraft>((draft) => draft.toggle(index));
 
+  void markAnswerText(AnswerMark mark) => _editDraft<HallucinationDraft>(
+    (draft) => draft.withMarks([...draft.selectionMarks, mark]),
+  );
+  void removeAnswerMark(AnswerMark mark) => _editDraft<HallucinationDraft>(
+    (draft) =>
+        draft.withMarks(draft.selectionMarks.where((m) => m != mark).toList()),
+  );
+  void confirmNoErrors() =>
+      _editDraft<HallucinationDraft>((draft) => draft.confirmNoErrors());
+  void markLiveAnswerText(AnswerMark mark) => _editDraft<LiveCheckDraft>(
+    (draft) => draft.withMarks([...draft.selectionMarks, mark]),
+  );
+  void removeLiveAnswerMark(AnswerMark mark) => _editDraft<LiveCheckDraft>(
+    (draft) =>
+        draft.withMarks(draft.selectionMarks.where((m) => m != mark).toList()),
+  );
+  void confirmLiveNoErrors() =>
+      _editDraft<LiveCheckDraft>((draft) => draft.confirmNoErrors());
+
   void editPrompt(String text) =>
       _editDraft<PromptDraft>((draft) => draft.edit(text));
 
@@ -85,6 +105,7 @@ class LessonController extends AsyncNotifier<LessonState> {
 
   void toggleLiveCheckSentence(int index) =>
       _editDraft<LiveCheckDraft>((draft) => draft.toggle(index));
+
   void skipStoryScenes() =>
       _editDraft<StoryDraft>((draft) => draft.skipScenes());
 

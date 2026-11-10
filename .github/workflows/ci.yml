@@ -65,3 +65,18 @@ jobs:
         run: docker compose build tools
       - name: Lint, format check, tests, content validation
         run: make check-tools
+
+  deploy-config:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Validate deployment workflows
+        run: docker run --rm -v "$PWD:/repo" -w /repo rhysd/actionlint:1.7.12
+      - name: Check deployment shell scripts
+        run: docker run --rm --entrypoint shellcheck -v "$PWD:/repo" -w /repo rhysd/actionlint:1.7.12 deploy/ci-make.sh deploy/setup-github-oidc.sh
+      - name: Test the deployment CI gate
+        run: python3 -m unittest discover -s deploy/tests
+      - name: Check Make targets without deploying
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: /tmp/gha-creds-validation.json
+        run: bash deploy/ci-make.sh -n publish-api-image deploy-api-image prepare-web publish-web

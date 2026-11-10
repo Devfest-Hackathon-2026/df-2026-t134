@@ -271,11 +271,11 @@
     },
     "HallucinationExercise": {
       "additionalProperties": false,
-      "description": "Q2: an AI answer split into sentences; the learner taps the wrong ones.",
+      "description": "Q2: verify an AI answer; zero errors is a valid authored answer.",
       "properties": {
         "errorCount": {
           "maximum": 3,
-          "minimum": 1,
+          "minimum": 0,
           "title": "Errorcount",
           "type": "integer"
         },
@@ -371,11 +371,12 @@
     },
     "LiveCheckExercise": {
       "additionalProperties": false,
-      "description": "The learner asks Gemini about `theme` with their own prompt. The server answers with\nsources from Google Search, secretly rewrites `error_count` sentences to be wrong, and the\nlearner finds them, looking up sources at most `lookup_limit` times.",
+      "description": "The learner asks Gemini about `theme` with their own prompt. The server answers with\nsources from Google Search, may rewrite up to `error_count` sentences, and the learner\nverifies the answer using at most `lookup_limit` source lookups.",
       "properties": {
         "errorCount": {
+          "description": "Maximum possible errors; not the answer verdict",
           "maximum": 2,
-          "minimum": 1,
+          "minimum": 0,
           "title": "Errorcount",
           "type": "integer"
         },

@@ -110,6 +110,21 @@ void main() {
   });
 
   group('HallucinationDraft', () {
+    test(
+      'explicit no-error verdict sends an empty answer and marking clears it',
+      () {
+        final initial = HallucinationDraft(exercise);
+        expect(initial.toAnswer(), isNull);
+        final clean = initial.confirmNoErrors();
+        expect(clean.toAnswer()!.toJson(), {
+          'type': 'hallucination',
+          'sentenceIndexes': [],
+        });
+        expect(clean.toggle(1).confirmedNoErrors, isFalse);
+        expect(clean.toggle(1).selectedIndexes, {1});
+      },
+    );
+
     test('toggles sentences and sends them sorted', () {
       final draft = HallucinationDraft(exercise).toggle(4).toggle(1);
 

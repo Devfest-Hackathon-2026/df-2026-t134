@@ -166,3 +166,31 @@ def test_parallel_lookups_never_exceed_the_limit(
     assert len(results) - len(errors) == exercise.lookup_limit
     assert {e.status_code for e in errors} == {409}
     assert _stored(firestore_client, uid, session_id)["lookupsUsed"] == exercise.lookup_limit
+
+
+@pytest.fixture(autouse=True)
+def deterministic_error_count(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(live_check, "choose_error_count", lambda maximum: maximum)
+
+
+def test_clean_session_is_persisted_and_empty_verdict_is_graded_once(
+    repo: FirestoreLearningRepo,
+    firestore_client: Client,
+    uid: str,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(live_check, "choose_error_count", lambda maximum: 0)
+    client = _client(repo, uid)
+    response = _start(client)
+    assert response.status_code == 200
+    session_id = response.json()["sessionId"]
+    assert _stored(firestore_client, uid, session_id)["errors"] == []
+    body = {
+        "exerciseId": LIVE_CHECK_ID,
+        "answer": {"type": "live_check", "sessionId": session_id, "sentenceIndexes": []},
+    }
+    first = client.post("/v1/answers", json=body, headers=AUTH_HEADERS)
+    assert first.status_code == 200
+    assert first.json()["correct"] is True
+    assert first.json()["progress"]["xpGained"] == 10
+    assert client.post("/v1/answers", json=body, headers=AUTH_HEADERS).status_code == 409

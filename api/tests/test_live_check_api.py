@@ -666,3 +666,47 @@ def test_logs_never_contain_the_prompt_or_the_sentences(
     text = caplog.text
     assert PROMPT not in text
     assert all(sentence not in text for sentence in [*CORRECT, WRONG_1])
+
+
+@pytest.fixture(autouse=True)
+def deterministic_error_count(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(live_check, "choose_error_count", lambda maximum: maximum)
+
+
+def test_clean_response_uses_no_injection_and_empty_answer_scores_once(monkeypatch):
+    monkeypatch.setattr(live_check, "choose_error_count", lambda maximum: 0)
+    repo = _repo()
+    generator = FakeGenerator()
+    client = _client(repo, FakeAnswerer(ANSWER), generator)
+    started = _start(client)
+    assert started.status_code == 200
+    data = started.json()
+    assert [s["text"] for s in data["sentences"]] == CORRECT
+    # This legacy field is the configured maximum, not the secret count.
+    assert data["errorCount"] == 1
+    assert generator.requests == []
+    result = _answer(client, data["sessionId"], [])
+    assert result.status_code == 200
+    assert result.json()["correct"] is True
+    assert result.json()["result"]["errors"] == []
+    assert result.json()["progress"]["xpGained"] == XP_FIRST_CORRECT_ANSWER
+    _error(_answer(client, data["sessionId"], []), 409, "conflict")
+
+
+def test_clean_response_marking_a_correct_claim_is_a_false_alarm(monkeypatch):
+    monkeypatch.setattr(live_check, "choose_error_count", lambda maximum: 0)
+    client = _client(_repo(), FakeAnswerer(ANSWER))
+    started = _start(client).json()
+    result = _answer(client, started["sessionId"], [1])
+    assert result.status_code == 200
+    assert result.json()["correct"] is False
+    assert result.json()["result"]["falseAlarms"] == [1]
+
+
+def test_claiming_no_errors_on_an_altered_answer_is_a_miss_without_xp(repo):
+    repo.add_live_check(UID, "s1", _session())
+    result = _answer(_client(repo, FakeAnswerer()), "s1", [])
+    assert result.status_code == 200
+    assert result.json()["correct"] is False
+    assert result.json()["result"]["missed"] == [1]
+    assert result.json()["progress"]["xpGained"] == 0

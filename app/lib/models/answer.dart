@@ -101,21 +101,6 @@ final class LiveCheckAnswer extends Answer {
   };
 }
 
-final class StoryAnswer extends Answer {
-  const StoryAnswer(this.optionId);
-
-  final String optionId;
-
-  @override
-  ExerciseType get type => ExerciseType.story;
-
-  @override
-  Map<String, Object?> toJson() => {
-    'type': type.wireName,
-    'optionId': optionId,
-  };
-}
-
 class SubmitAnswerRequest {
   const SubmitAnswerRequest({required this.exerciseId, required this.answer});
 
@@ -414,38 +399,6 @@ final class LiveCheckResult extends AnswerResult {
   }
 }
 
-final class StoryResult extends AnswerResult {
-  StoryResult({
-    required this.bestOptionId,
-    required List<Scene> outcome,
-    required this.explanation,
-  }) : outcome = List.unmodifiable(outcome);
-
-  final String bestOptionId;
-
-  /// What happens after the learner's choice, played before the feedback.
-  final List<Scene> outcome;
-  final String explanation;
-
-  @override
-  ExerciseType get type => ExerciseType.story;
-
-  factory StoryResult.fromJson(Object? json) {
-    const what = 'StoryResult';
-    final map = readObject(
-      json,
-      what,
-      allowed: const {'type', 'bestOptionId', 'outcome', 'explanation'},
-    );
-    return StoryResult(
-      bestOptionId: readId(map, 'bestOptionId', what),
-      // The answer key has 1..4 scenes per outcome.
-      outcome: readScenes(map, 'outcome', what, minItems: 1, maxItems: 4),
-      explanation: readText(map, 'explanation', what),
-    );
-  }
-}
-
 class SubmitAnswerResponse {
   const SubmitAnswerResponse({
     required this.attemptId,
@@ -490,6 +443,53 @@ class CompleteLessonResponse {
     return CompleteLessonResponse(
       lessonId: readId(map, 'lessonId', what),
       progress: ProgressSnapshot.fromJson(map['progress']),
+    );
+  }
+}
+
+final class StoryAnswer extends Answer {
+  const StoryAnswer(this.optionId);
+
+  final String optionId;
+
+  @override
+  ExerciseType get type => ExerciseType.story;
+
+  @override
+  Map<String, Object?> toJson() => {
+    'type': type.wireName,
+    'optionId': optionId,
+  };
+}
+
+final class StoryResult extends AnswerResult {
+  StoryResult({
+    required this.bestOptionId,
+    required List<Scene> outcome,
+    required this.explanation,
+  }) : outcome = List.unmodifiable(outcome);
+
+  final String bestOptionId;
+
+  /// What happens after the learner's choice, played before the feedback.
+  final List<Scene> outcome;
+  final String explanation;
+
+  @override
+  ExerciseType get type => ExerciseType.story;
+
+  factory StoryResult.fromJson(Object? json) {
+    const what = 'StoryResult';
+    final map = readObject(
+      json,
+      what,
+      allowed: const {'type', 'bestOptionId', 'outcome', 'explanation'},
+    );
+    return StoryResult(
+      bestOptionId: readId(map, 'bestOptionId', what),
+      // The answer key has 1..4 scenes per outcome.
+      outcome: readScenes(map, 'outcome', what, minItems: 1, maxItems: 4),
+      explanation: readText(map, 'explanation', what),
     );
   }
 }

@@ -37,7 +37,9 @@ class LiveCheckStarted(Contract):
     status: Literal["generated"]
     session_id: Id
     sentences: list[Sentence] = Field(min_length=2, max_length=12)
-    error_count: int = Field(ge=1, le=2)
+    error_count: int = Field(
+        ge=0, le=2, description="Maximum possible errors; not the answer verdict"
+    )
     lookups_left: int = Field(ge=0)
 
 

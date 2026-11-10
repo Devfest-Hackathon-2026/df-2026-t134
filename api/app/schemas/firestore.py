@@ -91,7 +91,7 @@ class LiveCheckSession(Contract):
     # The learner's prompt is kept for teachers and safety review, like Attempt.answer.
     prompt: str
     sentences: list[Sentence] = Field(min_length=2, max_length=12)
-    errors: list[HallucinationError] = Field(min_length=1, max_length=2)
+    errors: list[HallucinationError] = Field(min_length=0, max_length=2)
     # Sources per sentence index (as a string key, Firestore map keys are strings).
     sources: dict[str, list[WebSource]]
     lookups_used: int = Field(ge=0)

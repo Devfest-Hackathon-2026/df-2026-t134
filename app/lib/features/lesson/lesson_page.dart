@@ -193,6 +193,10 @@ class _PlayingView extends ConsumerWidget {
     final exercise = step.exercise;
     final speech = exercise.intro;
     final status = playing.status;
+    final hasLiveAnswer = switch (playing.draft) {
+      LiveCheckDraft(session: != null) => true,
+      _ => false,
+    };
     return LayoutBuilder(
       builder: (context, bounds) => Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -221,12 +225,12 @@ class _PlayingView extends ConsumerWidget {
                         label: Text('ふくしゅう'),
                       ),
                     ),
-                  if (speech != null) ...[
+                  if (speech != null && !hasLiveAnswer) ...[
                     MascotBubble(speech: speech),
                     const SizedBox(height: 16),
                   ],
                   // A story asks its question after the scenes.
-                  if (playing.draft is! StoryDraft) ...[
+                  if (playing.draft is! StoryDraft && !hasLiveAnswer) ...[
                     Text(
                       exercise.question,
                       key: const Key('exercise-question'),
@@ -317,17 +321,20 @@ class _PlayingView extends ConsumerWidget {
         result: result as FillBlankResult?,
         onChoose: editable ? controller.chooseBlankOption : null,
       ),
-      HallucinationDraft(:final exercise, :final selectedIndexes) =>
-        HallucinationExerciseView(
-          exercise: exercise,
-          selectedIndexes: selectedIndexes,
-          review: switch (playing.status) {
-            Checked(correctAnswer: CorrectHallucination(:final review)) =>
-              review,
-            _ => null,
-          },
-          onToggle: editable ? controller.toggleSentence : null,
-        ),
+      final HallucinationDraft draft => HallucinationExerciseView(
+        exercise: draft.exercise,
+        selectedIndexes: draft.selectedIndexes,
+        marks: draft.selectionMarks,
+        confirmedNoErrors: draft.confirmedNoErrors,
+        review: switch (playing.status) {
+          Checked(correctAnswer: CorrectHallucination(:final review)) => review,
+          _ => null,
+        },
+        onToggle: editable ? controller.toggleSentence : null,
+        onMark: editable ? controller.markAnswerText : null,
+        onRemove: editable ? controller.removeAnswerMark : null,
+        onNoErrors: editable ? controller.confirmNoErrors : null,
+      ),
       final PromptDraft draft => PromptExerciseView(
         draft: draft,
         onChanged: editable ? controller.editPrompt : null,
@@ -340,8 +347,12 @@ class _PlayingView extends ConsumerWidget {
           _ => null,
         },
         onChanged: editable ? controller.editLiveCheckPrompt : null,
+        onMark: editable ? controller.markLiveAnswerText : null,
+        onRemove: editable ? controller.removeLiveAnswerMark : null,
+        onNoErrors: editable ? controller.confirmLiveNoErrors : null,
         onToggle: editable ? controller.toggleLiveCheckSentence : null,
         onLookup: editable ? controller.lookUpSentence : null,
+      ),
       final StoryDraft draft => StoryExerciseView(
         draft: draft,
         result: result as StoryResult?,
@@ -404,7 +415,7 @@ class _CheckBar extends StatelessWidget {
     final hint = switch (playing.draft) {
       OrderDraft() => 'ぜんぶのカードをならべたらチェックしよう',
       FillBlankDraft() => 'ぜんぶの空らんをうめたらチェックしよう',
-      HallucinationDraft() => 'まちがっていると思う文をタップしてからチェックしよう',
+      HallucinationDraft() => '誤りと思う部分を指定するか、「誤りはない」を選ぼう',
       ChoiceDraft() => '答えを 1 つえらんでね',
       PromptDraft() => 'プロンプトを書いたら送ろう',
       LiveCheckDraft() => 'まちがいだと思う文をタップしてから決定しよう',

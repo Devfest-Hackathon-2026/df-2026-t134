@@ -7,8 +7,8 @@ Start (POST /v1/live-checks):
 4. One grounded call (Google Search) answers the prompt. Its first line is a verdict, so
    off-theme and inappropriate prompts are caught by the same call at no extra cost; the
    provider's safety filter blocking the call also counts as inappropriate.
-5. One JSON-schema call rewrites exactly `errorCount` sentences (the shared error-injection
-   core). An output that does not fit is retried once while time is left, then 503.
+5. Randomly choose zero through `errorCount` sentences to rewrite. A clean answer makes
+   no rewriting call. An invalid rewrite is retried once while time is left, then 503.
 6. The session (with the secret errors and the sources per sentence) is saved; the learner
    gets only the sentences.
 
@@ -19,6 +19,7 @@ cannot be used twice and a session cannot be answered twice.
 import datetime as dt
 import logging
 import re
+import secrets
 import time
 from collections.abc import Callable, Sequence
 from dataclasses import dataclass
@@ -190,10 +191,15 @@ def start_live_check(
         _log_blocked(exercise.id, answered.reasons[0], [])
         return answered
 
-    injection = _retry_once(
-        lambda: _inject(generator, exercise, answered.sentences), elapsed, "injection"
+    count = choose_error_count(exercise.error_count)
+    injected = (
+        _retry_once(
+            lambda: _inject(generator, exercise, answered.sentences, count), elapsed, "injection"
+        ).errors
+        if count
+        else []
     )
-    wrong = {error.index: error.wrong_text for error in injection.errors}
+    wrong = {error.index: error.wrong_text for error in injected}
     session = LiveCheckSession(
         exercise_id=exercise.id,
         lesson_id=exercise.lesson_id,
@@ -209,7 +215,7 @@ def start_live_check(
                 correction=answered.sentences[error.index],
                 tip=error.tip,
             )
-            for error in sorted(injection.errors, key=lambda error: error.index)
+            for error in sorted(injected, key=lambda error: error.index)
         ],
         sources=answered.sources,
         lookups_used=0,
@@ -380,13 +386,16 @@ def _split_verdict(text: str) -> tuple[Verdict, str]:
     return verdict, rest
 
 
+def choose_error_count(maximum: int) -> int:
+    """Server-owned choice: a clean answer has the same chance as each nonzero count."""
+    return secrets.randbelow(maximum + 1)
+
+
 def _inject(
-    generator: JsonGenerator, exercise: LiveCheckExercise, sentences: Sequence[str]
+    generator: JsonGenerator, exercise: LiveCheckExercise, sentences: Sequence[str], count: int
 ) -> Injection:
     try:
-        return inject_fitting_errors(
-            generator, exercise.theme, sentences, exercise.error_count, LIVE_ERROR_TYPES
-        )
+        return inject_fitting_errors(generator, exercise.theme, sentences, count, LIVE_ERROR_TYPES)
     except AiBlocked as exc:
         # The learner's prompt already passed; a blocked rewrite is our problem, not theirs.
         raise InjectionRejected("the rewrite was blocked by the safety filter") from exc

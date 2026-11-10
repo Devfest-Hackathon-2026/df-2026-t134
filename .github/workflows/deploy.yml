@@ -1,0 +1,77 @@
+name: Deploy production
+
+on:
+  workflow_dispatch:
+    inputs:
+      target:
+        description: Components to redeploy (content and rules are not modified)
+        required: true
+        default: all
+        type: choice
+        options: [all, web, api]
+
+permissions:
+  contents: read
+  actions: read
+  id-token: write
+
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    environment:
+      name: production
+      url: https://tokyo03-514216.web.app
+    env:
+      GH_TOKEN: ${{ github.token }}
+      DEPLOY_TARGET: ${{ inputs.target }}
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+      - name: Wait for successful CI for this exact commit
+        run: |
+          case "$DEPLOY_TARGET" in all|web|api) ;; *) exit 1 ;; esac
+          python3 deploy/wait-for-ci.py
+      - name: Build local deployment tools
+        if: inputs.target != 'api'
+        run: docker compose --env-file /dev/null -p ailearn-actions build app firebase
+      - name: Build API image before cloud authentication
+        if: inputs.target != 'web'
+        run: make build-api-image
+      - uses: google-github-actions/auth@7c6bc770dae815cd3e89ee6cdf493a5fab2cc093 # v3
+        with:
+          project_id: tokyo03-514216
+          workload_identity_provider: ${{ vars.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ vars.GCP_DEPLOY_SERVICE_ACCOUNT }}
+      - uses: google-github-actions/setup-gcloud@aa5489c8933f4cc7a4f7d45035b3b1440c9c10db # v3
+      - name: Publish and deploy API
+        if: inputs.target != 'web'
+        run: bash deploy/ci-make.sh publish-api-image deploy-api-image
+      - name: Prepare production web configuration
+        if: inputs.target != 'api'
+        run: bash deploy/ci-make.sh prepare-web
+      - name: Build production web
+        if: inputs.target != 'api'
+        run: make COMPOSE='docker compose --env-file /dev/null -p ailearn-actions' build-web-production
+      # Refresh authentication after compilation before publishing Hosting.
+      - uses: google-github-actions/auth@7c6bc770dae815cd3e89ee6cdf493a5fab2cc093 # v3
+        if: inputs.target != 'api'
+        with:
+          project_id: tokyo03-514216
+          workload_identity_provider: ${{ vars.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ vars.GCP_DEPLOY_SERVICE_ACCOUNT }}
+      - name: Publish Firebase Hosting
+        if: inputs.target != 'api'
+        run: bash deploy/ci-make.sh publish-web
+      - name: Deployment summary
+        run: |
+          {
+            echo "### Production deployed"
+            echo "Commit: $GITHUB_SHA"
+            echo "Target: $DEPLOY_TARGET"
+            echo "https://tokyo03-514216.web.app"
+          } >> "$GITHUB_STEP_SUMMARY"

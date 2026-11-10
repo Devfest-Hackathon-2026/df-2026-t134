@@ -118,12 +118,12 @@ class Sentence(Contract):
 
 
 class HallucinationExercise(_ExerciseBase):
-    """Q2: an AI answer split into sentences; the learner taps the wrong ones."""
+    """Q2: verify an AI answer; zero errors is a valid authored answer."""
 
     type: Literal["hallucination"]
     topic: NonEmptyText
     sentences: list[Sentence] = Field(min_length=2, max_length=12)
-    error_count: int = Field(ge=1, le=3)
+    error_count: int = Field(ge=0, le=3)
 
     @model_validator(mode="after")
     def _indexes_are_sequential(self) -> Self:
@@ -173,13 +173,15 @@ class StoryExercise(_ExerciseBase):
 
 class LiveCheckExercise(_ExerciseBase):
     """The learner asks Gemini about `theme` with their own prompt. The server answers with
-    sources from Google Search, secretly rewrites `error_count` sentences to be wrong, and the
-    learner finds them, looking up sources at most `lookup_limit` times."""
+    sources from Google Search, may rewrite up to `error_count` sentences, and the learner
+    verifies the answer using at most `lookup_limit` source lookups."""
 
     type: Literal["live_check"]
     theme: NonEmptyText
     suggestions: list[NonEmptyText] = Field(min_length=1, max_length=4)
-    error_count: int = Field(ge=1, le=2)
+    error_count: int = Field(
+        ge=0, le=2, description="Maximum possible errors; not the answer verdict"
+    )
     lookup_limit: int = Field(default=2, ge=0, le=5)
     max_length: int = Field(default=200, ge=20, le=400)
 
@@ -269,7 +271,7 @@ class HallucinationError(Contract):
 
 class HallucinationAnswerKey(Contract):
     type: Literal["hallucination"]
-    errors: list[HallucinationError] = Field(min_length=1, max_length=3)
+    errors: list[HallucinationError] = Field(min_length=0, max_length=3)
 
     @model_validator(mode="after")
     def _unique_indexes(self) -> Self:
